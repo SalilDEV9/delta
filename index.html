@@ -3,66 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neeharika's Naruto Garden</title>
+    <title>Neeharika's Hidden Leaf Garden</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;600&family=Fira+Code&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        :root { --naruto-orange: #ff6700; --leaf-green: #2e7d32; }
+        :root { --naruto-orange: #ff6700; }
         body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; font-family: 'Poppins', sans-serif; overflow: hidden; background: #000; color: #fff; }
 
-        /* Garden Gateway */
-        #gateway {
-            position: absolute; inset: 0;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1542273917363-3b1817f50a2b?q=80&w=2000') center/cover;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; transition: 1.2s ease-in-out;
+        /* Phase 1: Login Portal */
+        #login-portal {
+            position: absolute; inset: 0; z-index: 200;
+            background: #0a0a0a; display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        
+        .login-box {
+            text-align: center; background: #1a1a1a; padding: 40px; border-radius: 20px;
+            border: 2px solid var(--naruto-orange); box-shadow: 0 0 30px var(--naruto-orange);
+        }
+        input {
+            padding: 12px; border-radius: 8px; border: none; width: 200px; 
+            font-family: 'Fira Code', monospace; text-align: center; font-size: 1.1rem;
+        }
+
+        /* Phase 2: Gateway with Naruto */
+        #gateway {
+            position: absolute; inset: 0; display: none;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1542273917363-3b1817f50a2b?q=80&w=2000') center/cover;
+            flex-direction: column; justify-content: center; align-items: center; z-index: 100; opacity: 1; transition: 1.2s;
+        }
         #naruto-box {
             background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 30px; 
-            text-align: center; color: #333; box-shadow: 0 0 50px var(--naruto-orange); width: 85%; max-width: 480px;
-            border: 5px solid var(--naruto-orange);
+            text-align: center; color: #333; width: 85%; max-width: 450px; border: 5px solid var(--naruto-orange);
         }
-
         #timer { font-family: 'Fira Code', monospace; font-size: 2.5rem; color: var(--naruto-orange); margin: 15px 0; font-weight: bold; }
-        .guide-char { width: 180px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3)); animation: shinobiFloat 3s infinite ease-in-out; }
-        @keyframes shinobiFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .guide-img { width: 150px; animation: shinobi 3s infinite ease-in-out; }
+        @keyframes shinobi { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        /* Hidden Leaf Garden Dashboard */
+        /* Phase 3: The Garden */
         #garden-canvas {
-            position: absolute; inset: 0;
+            position: absolute; inset: 0; display: none;
             background: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=2000') center/cover;
-            display: none; filter: brightness(0.4); transition: 3s filter ease;
+            filter: brightness(0.4); transition: 3s filter ease;
         }
-
         .node {
-            position: absolute; width: 75px; height: 75px; border-radius: 50%; border: 3px solid #fff;
+            position: absolute; width: 70px; height: 70px; border-radius: 50%; border: 3px solid #fff;
             background-size: cover; background-position: center; cursor: pointer; transform: translate(-50%, -50%); 
-            z-index: 10; box-shadow: 0 0 20px var(--naruto-orange); transition: 0.4s;
+            z-index: 10; box-shadow: 0 0 15px var(--naruto-orange); transition: 0.4s;
         }
-        .node:hover { transform: translate(-50%, -50%) scale(1.25); border-color: var(--naruto-orange); box-shadow: 0 0 40px #fff; }
+        .node:hover { transform: translate(-50%, -50%) scale(1.2); border-color: var(--naruto-orange); }
 
-        /* 8 Node Coordinates for the Garden */
-        #node-1 { bottom: 15%; left: 20%; background-image: url('https://i.imgur.com/8Qp7k7w.jpg'); }
-        #node-2 { bottom: 30%; left: 80%; background-image: url('https://i.imgur.com/XF9vP2C.jpg'); }
-        #node-3 { bottom: 45%; left: 15%; background-image: url('https://i.imgur.com/uR1k9L8.jpg'); }
-        #node-4 { bottom: 60%; left: 85%; background-image: url('https://i.imgur.com/m9WzP8S.jpg'); }
-        #node-5 { bottom: 75%; left: 25%; background-image: url('https://i.imgur.com/pYI8e6Y.jpg'); }
-        #node-6 { bottom: 85%; left: 75%; background-image: url('https://i.imgur.com/jV7O5YV.jpg'); }
-        #node-7 { bottom: 50%; left: 50%; background-image: url('https://i.imgur.com/3Z6K6qA.jpg'); }
-        #node-8 { bottom: 25%; left: 50%; background-image: url('https://i.imgur.com/4qNfL6Z.jpg'); }
-        
-        #node-cake { position: absolute; top: 10%; left: 50%; font-size: 5rem; cursor: pointer; display: none; transform: translate(-50%, -50%); z-index: 20; filter: drop-shadow(0 0 20px #ff4081); }
+        /* Garden Node Positions */
+        #node-1 { bottom: 20%; left: 30%; background-image: url('https://i.imgur.com/8Qp7k7w.jpg'); }
+        #node-2 { bottom: 35%; left: 70%; background-image: url('https://i.imgur.com/XF9vP2C.jpg'); }
+        #node-3 { bottom: 50%; left: 25%; background-image: url('https://i.imgur.com/uR1k9L8.jpg'); }
+        #node-4 { bottom: 65%; left: 75%; background-image: url('https://i.imgur.com/m9WzP8S.jpg'); }
+        #node-5 { bottom: 15%; left: 50%; background-image: url('https://i.imgur.com/pYI8e6Y.jpg'); }
+        #node-cake { position: absolute; top: 12%; left: 50%; font-size: 4rem; display: none; transform: translate(-50%, -50%); cursor: pointer; }
 
-        /* Memory Panel */
-        #memory-panel {
+        /* Memory UI */
+        #panel {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 85%; max-width: 550px; background: rgba(0,0,0,0.85); backdrop-filter: blur(25px);
+            width: 80%; max-width: 500px; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px);
             padding: 40px; border-radius: 30px; border: 2px solid var(--naruto-orange);
             text-align: center; display: none; z-index: 300;
         }
-
-        .petal { position: absolute; background: #ffb7b2; border-radius: 150% 0 150% 0; animation: fall linear infinite; pointer-events: none; opacity: 0.7; }
+        .petal { position: absolute; background: #ffb7b2; border-radius: 150% 0 150% 0; animation: fall linear infinite; pointer-events: none; opacity: 0.6; }
         @keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }
     </style>
 </head>
@@ -71,12 +76,20 @@
     <audio id="audio-bg" loop><source src="https://archive.org/download/aachalketujhe/Aa%20Chal%20Ke%20Tujhe.mp3" type="audio/mpeg"></audio>
     <audio id="audio-bday" loop><source src="https://archive.org/download/HappyBirthdayToYou_201708/Happy%20Birthday%20To%20You.mp3" type="audio/mpeg"></audio>
 
+    <div id="login-portal">
+        <div class="login-box">
+            <h2 style="color: var(--naruto-orange);">Shinobi Access Required</h2>
+            <input type="password" id="pass" placeholder="Enter Password" onkeyup="checkPass(this.value)">
+            <p style="font-size: 0.8rem; margin-top: 10px;">Authorization code required for Sir Siddharth's Archive.</p>
+        </div>
+    </div>
+
     <div id="gateway">
         <div id="naruto-box">
-            <img src="https://www.pngarts.com/files/3/Naruto-PNG-Transparent-Image.png" class="guide-char" alt="Naruto">
+            <img src="https://www.pngarts.com/files/3/Naruto-PNG-Transparent-Image.png" class="guide-img" alt="Naruto">
             <h2 style="font-family: 'Playfair Display';">Neeharika, are you ready?</h2>
             <div id="timer">00:00:00</div>
-            <p style="color: #666;">Believe it! The garden awakens at midnight.</p>
+            <p>Believe it! The garden awaits the stroke of midnight.</p>
         </div>
     </div>
 
@@ -86,64 +99,51 @@
         <div class="node" id="node-3" onclick="showMemory(3)"></div>
         <div class="node" id="node-4" onclick="showMemory(4)"></div>
         <div class="node" id="node-5" onclick="showMemory(5)"></div>
-        <div class="node" id="node-6" onclick="showMemory(6)"></div>
-        <div class="node" id="node-7" onclick="showMemory(7)"></div>
-        <div class="node" id="node-8" onclick="showMemory(8)"></div>
         <div id="node-cake" onclick="birthdayBoom()">🎂</div>
     </div>
 
-    <div id="memory-panel" onclick="this.style.display='none'">
-        <p id="memory-text" style="font-size: 1.4rem; line-height: 1.8; font-weight: 300;"></p>
-        <p style="font-size: 0.9rem; color: var(--naruto-orange); margin-top: 20px;">[ Click anywhere to continue ]</p>
+    <div id="panel" onclick="this.style.display='none'">
+        <p id="panel-text" style="font-size: 1.3rem; line-height: 1.8;"></p>
+        <p style="font-size: 0.8rem; color: var(--naruto-orange); margin-top: 15px;">[ Click to continue ]</p>
     </div>
 
     <script>
         const memories = [
-            "In the golden haze of a September morning, I met someone remarkable: You. [cite: 2026-01-20]",
-            "You didn't just speak—you listened. You saw the silent battles and the tremors in voices. [cite: 2026-01-20]",
-            "“Even chaos can have rhythm,” you said. You found beauty in a paper caught in the wind. [cite: 2026-01-20]",
-            "You are like Spring—fragile, persistent, and waiting to bloom. You illuminate everything. [cite: 2026-01-20]",
-            "Because of personal reasons, I couldn’t always talk as much as I wanted. But I treasure you. [cite: 2026-01-20]",
-            "You are a story unfolding in real time. People like you don't enter lives—they illuminate them. [cite: 2026-01-20]",
-            "I carry your presence like sunlight, warming corners I didn’t know were cold. [cite: 2026-01-20]",
-            "Today, on your birthday, I want to say: may this year be as vibrant as you are. [cite: 2026-01-20]"
+            "In the golden haze of a September morning, I met someone remarkable: You.",
+            "You didn't just speak—you listened. You saw the silent battles.",
+            "“Even chaos can have rhythm,” you said. You found beauty in the wind.",
+            "You are like Spring—fragile, persistent, and waiting to bloom.",
+            "Today, on your birthday, I want to say: may this year be as vibrant as you are."
         ];
 
-        let buffer = "";
-        window.addEventListener('keydown', (e) => {
-            buffer += e.key;
-            if (buffer.includes("123456")) {
-                buffer = "";
-                igniteCelebration();
+        function checkPass(val) {
+            if (val === "123456") {
+                document.getElementById('login-portal').style.display = 'none';
+                document.getElementById('gateway').style.display = 'flex';
+                updateTimer();
             }
-            if (buffer.length > 10) buffer = buffer.substring(1);
-        });
+        }
 
         function updateTimer() {
-            const now = new Date();
             const bday = new Date('2026-02-21T00:00:00+05:30');
-            const diff = bday - now;
-
+            const diff = bday - new Date();
             if (diff <= 0) {
                 document.getElementById('timer').innerText = "00:00:00";
                 igniteCelebration();
                 return;
             }
-
-            const h = Math.floor(diff / 3600000).toString().padStart(2, '0');
-            const m = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
-            const s = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+            const h = Math.floor(diff/3600000).toString().padStart(2,'0');
+            const m = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
+            const s = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
             document.getElementById('timer').innerText = `${h}:${m}:${s}`;
             setTimeout(updateTimer, 1000);
         }
 
         function igniteCelebration() {
-            const gateway = document.getElementById('gateway');
-            gateway.style.opacity = "0";
-            gateway.style.transform = "scale(1.5) rotate(5deg)";
-            
+            const g = document.getElementById('gateway');
+            g.style.opacity = '0';
             setTimeout(() => {
-                gateway.style.display = 'none';
+                g.style.display = 'none';
                 document.getElementById('garden-canvas').style.display = 'block';
                 document.getElementById('audio-bg').play();
                 document.getElementById('node-cake').style.display = 'block';
@@ -153,38 +153,35 @@
         }
 
         function showMemory(id) {
-            const panel = document.getElementById('memory-panel');
-            document.getElementById('memory-text').innerText = memories[id-1];
-            panel.style.display = 'block';
+            const p = document.getElementById('panel');
+            document.getElementById('panel-text').innerText = memories[id-1];
+            p.style.display = 'block';
         }
 
         function birthdayBoom() {
             document.getElementById('audio-bg').pause();
             document.getElementById('audio-bday').play();
-            const panel = document.getElementById('memory-panel');
-            document.getElementById('memory-text').innerHTML = "<span style='color:var(--naruto-orange); font-size:2.2rem; font-family:Playfair Display;'>HAPPY BIRTHDAY NEEHARIKA! 🌸</span><br><br>You are the Hidden Leaf's greatest treasure. [cite: 2026-01-20]";
-            panel.style.display = 'block';
-
-            var end = Date.now() + (15 * 1000);
+            const p = document.getElementById('panel');
+            document.getElementById('panel-text').innerHTML = "<span style='color:var(--naruto-orange); font-size:2rem;'>HAPPY BIRTHDAY NEEHARIKA! 🌸</span>";
+            p.style.display = 'block';
+            var end = Date.now() + 15000;
             (function frame() {
-                confetti({ particleCount: 10, spread: 70, origin: { y: 0.6 }, colors: ['#ff6700', '#ffffff', '#2e7d32'] });
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff6700'] });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff6700'] });
                 if (Date.now() < end) requestAnimationFrame(frame);
             }());
         }
 
         function createPetals() {
-            for(let i=0; i<50; i++) {
+            for(let i=0; i<40; i++) {
                 let p = document.createElement('div');
                 p.className = 'petal';
-                p.style.left = Math.random() * 100 + 'vw';
-                p.style.width = (Math.random() * 12 + 6) + 'px';
-                p.style.height = p.style.width;
-                p.style.animationDuration = (Math.random() * 6 + 5) + 's';
-                p.style.animationDelay = (Math.random() * 5) + 's';
+                p.style.left = Math.random()*100 + 'vw';
+                p.style.width = (Math.random()*10+5)+'px';
+                p.style.animationDuration = (Math.random()*5+5)+'s';
                 document.body.appendChild(p);
             }
         }
-        updateTimer();
     </script>
 </body>
 </html>
