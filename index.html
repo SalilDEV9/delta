@@ -63,7 +63,7 @@
         .typing { border-right: 2px solid var(--gold); animation: blink 0.7s infinite; }
         @keyframes blink { 50% { border-color: transparent; } }
         .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
-        @keyframes shake { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(4px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-6px, 0, 0); } 40%, 60% { transform: translate3d(6px, 0, 0); } }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
     </style>
 </head>
 <body id="main-body">
@@ -111,15 +111,15 @@
         const bdayId = getYTId("https://youtube.com/shorts/qcB6z6nsC5k?si=21uip56aKwvV90tO");
 
         const storySegments = [
-            "In the golden haze of a September morning, I was traveling, wandering through streets I barely knew, when I met her—Neeharika. At first, it was nothing remarkable. Just another online conversation while the world passed by. [cite: 2026-01-20]",
-            "She didn’t just speak—she listened. The kind that notices tremors in voices, the hesitation behind smiles, the silent battles that people carry in their chests. [cite: 2026-01-20]",
-            "Her favorite season is spring: 'I love spring because it whispers possibilities.' It’s about life itself, fragile and persistent, waiting to bloom. [cite: 2026-01-20]",
+            "In the golden haze of a September morning, I met her—Neeharika. At first, it was nothing remarkable. Just another online conversation while the world passed by. [cite: 2026-01-20]",
+            "She didn’t just speak—she listened. The kind that notices tremors in voices and silent battles. [cite: 2026-01-20]",
+            "Her favorite season is spring: 'I love spring because it whispers possibilities.' [cite: 2026-01-20]",
             "Her joy is effortless. One of her favorite songs, Espresso Cherry Cherry Lady, played softly once—playful and bright, just like her. [cite: 2026-01-20]",
-            "I remember a small moment: a stray paper caught in the wind. 'It’s dancing,' she said. 'Even chaos can have rhythm.' I realized she didn’t just see—she felt. [cite: 2026-01-20]",
-            "She has become more than a memory. She is a season, a melody, a story unfolding in real time. People like her illuminate it. [cite: 2026-01-20]",
+            "I remember a small moment: a stray paper caught in the wind. 'It’s dancing,' she said. 'Even chaos can have rhythm.' [cite: 2026-01-20]",
+            "She has become more than a memory. She is a season, a melody, a story unfolding. [cite: 2026-01-20]",
             "I carry her presence like sunlight, warming corners I didn’t know were cold. [cite: 2026-01-20]",
-            "I couldn’t always talk as much as I wanted due to personal reasons, but I feel so comfortable and secure talking to you. That’s rare. [cite: 2026-01-20]",
-            "Today, on your birthday, I want to say: may this year be as vibrant, joyful, and full of possibilities as you are. 🌸 [cite: 2026-01-20]"
+            "I couldn’t always talk as much as I wanted due to personal reasons, but I feel so secure talking to you. [cite: 2026-01-20]",
+            "Today, I want to say: may this year be as vibrant as you are. 🌸 [cite: 2026-01-20]"
         ];
 
         function onYouTubeIframeAPIReady() {
@@ -130,12 +130,23 @@
             });
         }
 
-        window.addEventListener('keydown', (e) => { if (e.key === '1' || e.key === '6') initiateGarden(); }); 
+        window.addEventListener('keydown', (e) => { if (e.key === '6') initiateGarden(); }); 
 
         function updateTimer() {
-            const diff = new Date('2026-02-21T00:00:00+05:30') - new Date();
-            if (diff <= 0) { initiateGarden(); return; }
-            document.getElementById('timer').innerText = new Date(diff).toISOString().substr(11, 8);
+            const now = new Date();
+            const bday = new Date('2026-02-21T00:00:00+05:30');
+            const diff = bday - now;
+            
+            if (diff <= 0) {
+                document.getElementById('timer').innerText = "00:00:00";
+                initiateGarden();
+                return;
+            }
+            
+            const h = Math.floor(diff/3600000).toString().padStart(2,'0');
+            const m = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
+            const s = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
+            document.getElementById('timer').innerText = `${h}:${m}:${s}`;
             setTimeout(updateTimer, 1000);
         }
 
