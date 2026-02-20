@@ -3,161 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neeharika's Memory Constellation</title>
-    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <title>Neeharika's Constellation</title>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        body {
-            margin: 0; padding: 0; font-family: 'Lora', serif;
-            background: linear-gradient(45deg, #ff9a9e, #fecfef, #f6e2b7, #a1c4fd);
-            background-size: 400% 400%; animation: gradientFlow 15s ease infinite;
-            overflow: hidden; color: #3e2723;
+        body, html {
+            margin: 0; padding: 0; width: 100vw; height: 100vh;
+            font-family: 'Lora', serif; overflow: hidden; background-color: #0a0a0a;
         }
 
-        @keyframes gradientFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        /* Gateway Phase */
-        #gateway {
+        /* External High-Res Tree Background */
+        #tree-canvas {
             position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background-color: #fdfbf7; z-index: 10; transition: opacity 1.5s ease;
+            background: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=2000') center/cover no-repeat;
+            transition: filter 3s ease; filter: brightness(0.6);
         }
-        h1 { font-family: 'Playfair Display', serif; color: #d81b60; font-size: 2.5rem; }
-        .btn {
-            padding: 15px 35px; margin-top: 20px; background: #ff8fb3; color: white;
-            border: none; border-radius: 30px; cursor: pointer; font-size: 1.2rem;
-            box-shadow: 0 10px 20px rgba(255, 143, 179, 0.4); transition: 0.3s;
-        }
-        .btn:hover { background: #ff4081; transform: translateY(-3px); }
 
-        /* Graph Container */
-        #network-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
+        /* Image-Filled Nodes */
+        .node {
+            position: absolute; width: 65px; height: 65px;
+            background-size: cover; background-position: center;
+            border: 3px solid rgba(255, 255, 255, 0.8); border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 235, 59, 0.6);
+            cursor: pointer; transform: translate(-50%, -50%);
+            transition: all 0.4s ease; z-index: 10;
+        }
+        .node:hover { transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 30px #fff, 0 0 50px #ffeb3b; z-index: 12; }
+        
+        /* Dashboard Placements & External Thumbnail Images */
+        #node-1 { bottom: 15%; left: 25%; background-image: url('https://images.unsplash.com/photo-1474403078171-841808b8b8ba?w=200'); }
+        #node-2 { bottom: 30%; left: 70%; background-image: url('https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=200'); }
+        #node-3 { bottom: 45%; left: 35%; background-image: url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=200'); }
+        #node-4 { bottom: 60%; left: 65%; background-image: url('https://images.unsplash.com/photo-1490750967868-88cb4aca8fbf?w=200'); }
+        #node-5 { bottom: 75%; left: 30%; background-image: url('https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=200'); }
+        #node-6 { bottom: 80%; left: 75%; background-image: url('https://images.unsplash.com/photo-1507504031008-b5d7d8e8b0c7?w=200'); }
+        
+        /* The Finale Cake Node */
+        #node-cake {
+            position: absolute; top: 10%; left: 50%;
+            font-size: 4rem; cursor: pointer; display: none;
+            transform: translate(-50%, -50%); z-index: 15;
+            text-shadow: 0 0 25px #ff4081; animation: float 3s infinite ease-in-out;
+        }
+        @keyframes float { 0%, 100% { top: 10%; } 50% { top: 8%; } }
 
-        /* Memory Modal */
-        #memory-modal {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 80vw; max-width: 600px; max-height: 85vh; overflow-y: auto;
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px);
-            border-radius: 20px; padding: 30px; z-index: 5; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-            text-align: center; opacity: 0; transition: opacity 0.5s ease;
+        /* Frosted Glass Memory Panel */
+        #memory-panel {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
+            width: 80vw; max-width: 600px; padding: 40px; text-align: center;
+            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px;
+            color: #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            opacity: 0; pointer-events: none; transition: all 0.5s ease; z-index: 20;
         }
-        #memory-modal img { width: 100%; height: 250px; object-fit: cover; border-radius: 12px; margin-bottom: 20px; }
-        #memory-modal p { font-size: 1.2rem; line-height: 1.8; }
-        .close-btn {
-            margin-top: 20px; padding: 10px 25px; background: #3e2723; color: white;
-            border: none; border-radius: 20px; cursor: pointer; transition: 0.3s;
-        }
-        .close-btn:hover { background: #d81b60; }
+        #memory-panel.active { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+        #memory-panel p { font-size: 1.4rem; line-height: 1.8; text-shadow: 1px 1px 6px rgba(0,0,0,0.9); }
+        .close-btn { margin-top: 20px; padding: 10px 30px; background: rgba(255, 255, 255, 0.2); color: #fff; border: 1px solid #fff; border-radius: 30px; cursor: pointer; transition: 0.3s; }
+        .close-btn:hover { background: #fff; color: #000; }
+
+        /* Spring Petals Engine */
+        .petal { position: absolute; background: #ffb7b2; border-radius: 150% 0 150% 0; opacity: 0.7; pointer-events: none; animation: fall linear infinite; z-index: 5; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
+        /* Gateway Overlay */
+        #gateway { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background: #0a0a0a; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 50; transition: opacity 1.5s; }
+        .gateway-btn { padding: 15px 40px; font-size: 1.2rem; background: transparent; color: #fff; border: 2px solid #ff4081; border-radius: 30px; cursor: pointer; box-shadow: 0 0 15px #ff4081; transition: 0.3s; font-family: 'Playfair Display', serif; }
+        .gateway-btn:hover { background: #ff4081; }
     </style>
 </head>
 <body>
 
-    <audio id="bg-music" loop>
-        <source src="espresso.mp3" type="audio/mpeg"> 
-    </audio>
+    <audio id="audio-bg" loop><source src="https://archive.org/download/aachalketujhe/Aa%20Chal%20Ke%20Tujhe.mp3" type="audio/mpeg"></audio>
+    <audio id="audio-bday" loop><source src="https://archive.org/download/HappyBirthdayToYou_201708/Happy%20Birthday%20To%20You.mp3" type="audio/mpeg"></audio>
 
     <div id="gateway">
-        <h1>Neeharika's Constellation</h1>
-        <p>A mapped sequence of memories.</p>
-        <button class="btn" onclick="initiateSystem()">Explore Nodes</button>
+        <button class="gateway-btn" onclick="initializeSystem()">Enter Constellation</button>
     </div>
 
-    <div id="network-container"></div>
+    <div id="tree-canvas">
+        <div class="node" id="node-1" onclick="openMemory(1)"></div>
+        <div class="node" id="node-2" onclick="openMemory(2)"></div>
+        <div class="node" id="node-3" onclick="openMemory(3)"></div>
+        <div class="node" id="node-4" onclick="openMemory(4)"></div>
+        <div class="node" id="node-5" onclick="openMemory(5)"></div>
+        <div class="node" id="node-6" onclick="openMemory(6)"></div>
+        <div id="node-cake" onclick="triggerFinale()">🎂</div>
+    </div>
 
-    <div id="memory-modal">
-        <img id="modal-img" src="" alt="Memory Image">
-        <p id="modal-text"></p>
-        <button class="close-btn" onclick="closeModal()">Close Memory</button>
+    <div id="memory-panel">
+        <p id="memory-text"></p>
+        <button class="close-btn" onclick="closeMemory()">Continue</button>
     </div>
 
     <script>
-        // Story Data Object
+        const API_BASE = "https://neeharika-vault.saliljha523.workers.dev";
+        let finaleUnlocked = false;
+        
+        // Hardcoded story for immediate visual loading
         const storyData = {
-            1: {
-                title: "September",
-                img: "https://images.unsplash.com/photo-1474403078171-841808b8b8ba?w=600&q=80",
-                text: "In the golden haze of a September morning, I was traveling, wandering through streets I barely knew, when I met her—Neeharika. At first, it was nothing remarkable. Just another online conversation while the world passed by outside my window."
-            },
-            2: {
-                title: "The Listener",
-                img: "https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=600&q=80",
-                text: "But even in those first two days, I sensed something different about her. She didn’t just speak—she listened. Not the polite nod-and-smile kind of listening, but the kind that notices tremors in voices, the hesitation behind smiles, the silent battles that people carry in their chests."
-            },
-            3: {
-                title: "Rhythm of Chaos",
-                img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80",
-                text: "Her joy is effortless. Not loud or performative, but a quiet, radiant energy that slips past walls. I remember a small moment: a stray paper caught in the wind. 'It’s dancing,' she said. 'Even chaos can have rhythm.'"
-            },
-            4: {
-                title: "Spring",
-                img: "https://images.unsplash.com/photo-1490750967868-88cb4aca8fbf?w=600&q=80",
-                text: "Her favorite season is spring, and it suits her perfectly. There’s a rhythm to her presence, a cadence that mirrors renewal itself. Joy, observation, insight—they flow naturally from her."
-            },
-            5: {
-                title: "Happy Birthday",
-                img: "https://images.unsplash.com/photo-1513297887119-d46091b24bfa?w=600&q=80",
-                text: "<strong style='font-size:1.5rem; color:#d81b60;'>Happy Birthday, Neeharika. 🌸</strong><br><br>Because of personal reasons and circumstances, I couldn’t always talk as much as I wanted. But even through all the ups and downs, I feel so comfortable and secure talking to you. That’s rare—and it’s something I treasure deeply. May this year be as vibrant, joyful, and full of possibilities as you are. You don't just enter lives—you illuminate them."
-            }
+            1: "In the golden haze of a September morning, I was traveling, wandering through streets I barely knew, when I met her—Neeharika.",
+            2: "But even in those first two days, I sensed something different about her. She didn’t just speak—she listened.",
+            3: "Her joy is effortless. I remember a small moment: a stray paper caught in the wind. 'It’s dancing,' she said.",
+            4: "Her favorite season is spring, and it suits her perfectly. There’s a rhythm to her presence, a cadence that mirrors renewal itself.",
+            5: "Because of personal reasons, I couldn’t always talk as much as I wanted. But I feel so comfortable and secure talking to you.",
+            6: "People like her don’t merely enter your life—they illuminate it. And I carry her presence like sunlight."
         };
 
-        function initiateSystem() {
-            document.getElementById('bg-music').play();
-            const gateway = document.getElementById('gateway');
-            gateway.style.opacity = '0';
-            setTimeout(() => { gateway.style.display = 'none'; }, 1500);
-            drawNetwork();
+        async function initializeSystem() {
+            document.getElementById('audio-bg').play();
+            document.getElementById('gateway').style.opacity = '0';
+            setTimeout(() => document.getElementById('gateway').style.display = 'none', 1500);
+
+            // Fetch Time-Lock status from API
+            try {
+                const res = await fetch(`${API_BASE}/api/story`);
+                const data = await res.json();
+                if (data.finaleUnlocked) {
+                    finaleUnlocked = true;
+                    document.getElementById('node-cake').style.display = 'block';
+                }
+            } catch (e) { console.error("API Sync Failed"); }
+
+            generatePetals();
         }
 
-        function drawNetwork() {
-            const container = document.getElementById('network-container');
-            
-            // Define Nodes
-            const nodes = new vis.DataSet([
-                { id: 1, label: 'The Meeting', shape: 'dot', size: 25, color: '#ff8fb3' },
-                { id: 2, label: 'The Listener', shape: 'dot', size: 25, color: '#a1c4fd' },
-                { id: 3, label: 'Dancing Chaos', shape: 'dot', size: 25, color: '#f6e2b7' },
-                { id: 4, label: 'Spring Cadence', shape: 'dot', size: 25, color: '#a8e6cf' },
-                { id: 5, label: 'The Core', shape: 'star', size: 40, color: '#d81b60' }
-            ]);
+        function openMemory(id) {
+            const panel = document.getElementById('memory-panel');
+            document.getElementById('memory-text').innerHTML = storyData[id];
 
-            // Connect Nodes in a path
-            const edges = new vis.DataSet([
-                { from: 1, to: 2, color: { color: '#ffffff', opacity: 0.7 }, width: 2 },
-                { from: 2, to: 3, color: { color: '#ffffff', opacity: 0.7 }, width: 2 },
-                { from: 3, to: 4, color: { color: '#ffffff', opacity: 0.7 }, width: 2 },
-                { from: 4, to: 5, color: { color: '#ffffff', opacity: 0.7 }, width: 3 }
-            ]);
+            const brightness = 0.6 + (id * 0.06);
+            document.getElementById('tree-canvas').style.filter = `brightness(${brightness})`;
 
-            const data = { nodes: nodes, edges: edges };
-            
-            const options = {
-                nodes: { font: { size: 16, color: '#3e2723', face: 'Lora', background: 'rgba(255,255,255,0.5)' }, borderWidth: 3 },
-                physics: { stabilization: false, barnesHut: { gravitationalConstant: -3000, springLength: 150 } },
-                interaction: { hover: true }
-            };
-
-            const network = new vis.Network(container, data, options);
-
-            // Node Click Event
-            network.on("selectNode", function (params) {
-                const nodeId = params.nodes[0];
-                openModal(nodeId);
-            });
+            panel.classList.add('active');
         }
 
-        function openModal(id) {
-            const modal = document.getElementById('memory-modal');
-            document.getElementById('modal-img').src = storyData[id].img;
-            document.getElementById('modal-text').innerHTML = storyData[id].text;
-            
-            modal.style.display = 'block';
-            setTimeout(() => { modal.style.opacity = '1'; }, 50);
+        function closeMemory() {
+            document.getElementById('memory-panel').classList.remove('active');
         }
 
-        function closeModal() {
-            const modal = document.getElementById('memory-modal');
-            modal.style.opacity = '0';
-            setTimeout(() => { modal.style.display = 'none'; }, 500);
+        function triggerFinale() {
+            document.getElementById('audio-bg').pause();
+            document.getElementById('audio-bday').play();
+
+            const panel = document.getElementById('memory-panel');
+            document.getElementById('memory-text').innerHTML = `<strong style='font-size:2.2rem; color:#ff4081; font-family: "Playfair Display", serif;'>Happy Birthday, Neeharika. 🌸</strong><br><br>May this year be as vibrant, joyful, and full of possibilities as you are.`;
+            panel.classList.add('active');
+
+            launchFireworks();
+        }
+
+        function launchFireworks() {
+            var duration = 15 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        function generatePetals() {
+            const container = document.getElementById('tree-canvas');
+            for(let i=0; i<40; i++) {
+                let p = document.createElement('div');
+                p.className = 'petal';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.width = Math.random() * 12 + 6 + 'px';
+                p.style.height = p.style.width;
+                p.style.top = '-' + (Math.random() * 20 + 10) + 'px';
+                p.style.animationDuration = Math.random() * 6 + 4 + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(p);
+            }
         }
     </script>
 </body>
