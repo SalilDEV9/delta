@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neeharika's Garden</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;600&family=Fira+Code&display=swap" rel="stylesheet">
+    <title>Neeharika's Birthday Garden</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&family=Fira+Code&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     
@@ -12,101 +12,115 @@
         :root { --dora-blue: #0088cc; --dora-red: #e60012; }
         body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; font-family: 'Poppins', sans-serif; overflow: hidden; background: #000; color: #fff; }
 
+        /* Gateway Phase */
         #gateway {
             position: absolute; inset: 0;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1558904541-efa843a96f0f?q=80&w=2000') center/cover;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; transition: 1.5s;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 500; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
         #dora-box {
             background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 40px; 
             text-align: center; color: #333; width: 85%; max-width: 450px; border: 5px solid var(--dora-blue);
         }
-
         #timer { font-family: 'Fira Code', monospace; font-size: 2.8rem; color: var(--dora-blue); margin: 20px 0; font-weight: bold; }
         .dora-img { width: 140px; animation: bounce 3s infinite ease-in-out; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
+        /* Garden Dashboard */
         #garden-canvas {
             position: absolute; inset: 0; display: none;
             background: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=2000') center/cover;
-            filter: brightness(0.3); transition: 3s filter ease;
+            filter: brightness(0.3); transition: 4s filter ease;
         }
-
         .node {
-            position: absolute; width: 75px; height: 75px; border-radius: 50%; border: 3px solid #fff;
+            position: absolute; width: 70px; height: 70px; border-radius: 50%; border: 3px solid #fff;
             background-size: cover; background-position: center; cursor: pointer; transform: translate(-50%, -50%); 
             z-index: 10; box-shadow: 0 0 20px var(--dora-blue); transition: 0.4s;
         }
+        #node-1 { bottom: 15%; left: 20%; background-image: url('https://images.unsplash.com/photo-1490750967868-88cb4aca8fbf?w=200'); }
+        #node-2 { bottom: 30%; left: 80%; background-image: url('https://images.unsplash.com/photo-1474403078171-841808b8b8ba?w=200'); }
+        #node-3 { bottom: 45%; left: 25%; background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200'); }
+        #node-4 { bottom: 60%; left: 75%; background-image: url('https://images.unsplash.com/photo-1533134486753-c833f0ed4866?w=200'); }
+        #node-5 { bottom: 75%; left: 30%; background-image: url('https://images.unsplash.com/photo-1501854140801-50d01674aa3e?w=200'); }
+        #node-cake { position: absolute; top: 10%; left: 50%; font-size: 5rem; display: none; transform: translate(-50%, -50%); cursor: pointer; z-index: 20; }
 
-        #node-1 { bottom: 20%; left: 30%; background-image: url('https://images.unsplash.com/photo-1490750967868-88cb4aca8fbf?w=200'); }
-        #node-2 { bottom: 40%; left: 75%; background-image: url('https://images.unsplash.com/photo-1474403078171-841808b8b8ba?w=200'); }
-        #node-3 { bottom: 60%; left: 25%; background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200'); }
-        #node-4 { bottom: 80%; left: 70%; background-image: url('https://images.unsplash.com/photo-1533134486753-c833f0ed4866?w=200'); }
-        #node-cake { position: absolute; top: 15%; left: 50%; font-size: 5rem; display: none; transform: translate(-50%, -50%); cursor: pointer; }
-
+        /* Story Panel */
         #panel {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 80%; max-width: 500px; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px);
+            width: 85%; max-width: 600px; max-height: 80vh; overflow-y: auto;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(25px);
             padding: 40px; border-radius: 30px; border: 2px solid var(--dora-blue);
-            text-align: center; display: none; z-index: 300;
+            text-align: center; display: none; z-index: 1000;
         }
-        #youtube-player { display: none; }
+        
+        /* Music Control Bar */
+        #music-hub {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
+            padding: 10px 20px; border-radius: 50px; display: none; z-index: 2000;
+            border: 1px solid rgba(255, 255, 255, 0.2); align-items: center; gap: 15px;
+        }
+        #youtube-player { width: 200px; height: 30px; border-radius: 10px; overflow: hidden; opacity: 0.5; }
     </style>
 </head>
 <body>
-
-    <div id="youtube-player"></div>
 
     <div id="gateway">
         <div id="dora-box">
             <img src="https://upload.wikimedia.org/wikipedia/en/b/bd/Doraemon_character.png" class="dora-img" alt="Doraemon">
             <h2 style="font-family: 'Playfair Display';">Neeharika, are you ready?</h2>
             <div id="timer">00:00:00</div>
-            <p>The 21st February garden is waiting...</p>
+            <p>Type the secret code or wait for the bloom...</p>
         </div>
     </div>
 
     <div id="garden-canvas">
-        <div class="node" id="node-1" onclick="showMem(0)"></div>
-        <div class="node" id="node-2" onclick="showMem(1)"></div>
-        <div class="node" id="node-3" onclick="showMem(2)"></div>
-        <div class="node" id="node-4" onclick="showMem(3)"></div>
-        <div id="node-cake" onclick="birthdayBoom()">🎂</div>
+        <div class="node" id="node-1" onclick="showStory(0)"></div>
+        <div class="node" id="node-2" onclick="showStory(1)"></div>
+        <div class="node" id="node-3" onclick="showStory(2)"></div>
+        <div class="node" id="node-4" onclick="showStory(3)"></div>
+        <div class="node" id="node-5" onclick="showStory(4)"></div>
+        <div id="node-cake" onclick="finalCelebration()">🎂</div>
+    </div>
+
+    <div id="music-hub">
+        <span style="font-size: 0.8rem; color: #00ccff;">Shinobi Radio 🎵</span>
+        <div id="youtube-player"></div>
     </div>
 
     <div id="panel" onclick="this.style.display='none'">
-        <p id="panel-text" style="font-size: 1.3rem; line-height: 1.8;"></p>
-        <p style="font-size: 0.8rem; color: var(--dora-blue); margin-top: 15px;">[ Click to continue ]</p>
+        <p id="panel-text" style="font-size: 1.2rem; line-height: 1.8;"></p>
+        <p style="font-size: 0.8rem; color: var(--dora-blue); margin-top: 20px;">[ Click anywhere to continue ]</p>
     </div>
 
     <script>
         let player;
-        const memories = [
-            "In the golden haze of a September morning, I met someone remarkable: You. [cite: 2026-01-20]",
-            "You didn't just speak—you listened. You saw the silent battles. [cite: 2026-01-20]",
-            "“Even chaos can have rhythm,” you said. You found beauty in the wind. [cite: 2026-01-20]",
-            "You are like Spring—fragile and persistent. Happy Birthday! [cite: 2026-01-20]"
+        const chapters = [
+            "In the golden haze of a September morning, I met someone remarkable: You. At first, it was nothing remarkable—just another conversation while the world passed by. But I sensed something different. [cite: 2026-01-20]",
+            "She didn’t just speak—she listened. Not the polite kind, but the kind that notices tremors in voices and the silent battles people carry. Her insight felt overwhelming at first, but it was just gentle attention. [cite: 2026-01-20]",
+            "Your favorite season is spring, and it suits you perfectly. 'I love spring because it whispers possibilities.' It’s about life itself, fragile and persistent, waiting to bloom. [cite: 2026-01-20]",
+            "Joy, observation, insight—they flow naturally from you. You observed a stray paper caught in the wind once and said, 'Even chaos can have rhythm.' I realized then you didn’t just see life—you felt it. [cite: 2026-01-20]",
+            "Because of personal reasons, I couldn’t always talk as much as I wanted. But I feel so secure talking to you. You are more than a memory—you are a season, a melody, a story unfolding. [cite: 2026-01-20]"
         ];
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
-                height: '0', width: '0',
+                height: '30', width: '200',
                 videoId: '_n74n_Lh7Yw', // Aa Chal Ke Tujhe
-                playerVars: { 'autoplay': 0, 'loop': 1, 'playlist': '_n74n_Lh7Yw' }
+                playerVars: { 'autoplay': 0, 'controls': 1, 'loop': 1, 'playlist': '_n74n_Lh7Yw' }
             });
         }
 
-        let buffer = "";
+        let keys = "";
         window.addEventListener('keydown', (e) => {
-            buffer += e.key;
-            if (buffer.includes("123456")) { buffer = ""; ignite(); }
+            keys += e.key;
+            if (keys.includes("123456")) { keys = ""; runBoom(); }
         });
 
         function updateTimer() {
             const bday = new Date('2026-02-21T00:00:00+05:30');
             const diff = bday - new Date();
-            if (diff <= 0) { ignite(); return; }
+            if (diff <= 0) { runBoom(); return; }
             const h = Math.floor(diff/3600000).toString().padStart(2,'0');
             const m = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
             const s = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
@@ -114,9 +128,10 @@
             setTimeout(updateTimer, 1000);
         }
 
-        function ignite() {
+        function runBoom() {
             if(player) player.playVideo();
             document.getElementById('gateway').style.opacity = '0';
+            document.getElementById('music-hub').style.display = 'flex';
             setTimeout(() => {
                 document.getElementById('gateway').style.display = 'none';
                 document.getElementById('garden-canvas').style.display = 'block';
@@ -125,17 +140,16 @@
             }, 1000);
         }
 
-        function showMem(i) {
-            document.getElementById('panel-text').innerText = memories[i];
+        function showStory(i) {
+            document.getElementById('panel-text').innerText = chapters[i];
             document.getElementById('panel').style.display = 'block';
         }
 
-        function birthdayBoom() {
-            // Change to Happy Birthday Song
-            player.loadVideoById('m_p_i-D0s0M'); // Standard Birthday Song
-            document.getElementById('panel-text').innerHTML = "<span style='color:var(--dora-red); font-size:2rem;'>HAPPY BIRTHDAY! 🌸</span>";
+        function finalCelebration() {
+            player.loadVideoById('m_p_i-D0s0M'); // Birthday Song
+            document.getElementById('panel-text').innerHTML = "<span style='color:var(--dora-red); font-size:2rem; font-family:Playfair Display;'>HAPPY BIRTHDAY NEEHARIKA! 🌸</span><br><br>May this year be as vibrant as you are. [cite: 2026-01-20]";
             document.getElementById('panel').style.display = 'block';
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
         }
         updateTimer();
     </script>
