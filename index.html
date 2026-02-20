@@ -3,124 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neeharika's Birthday Garden</title>
+    <title>Neeharika's Birthday Archive</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&family=Fira+Code&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     
     <style>
-        :root { --dora-blue: #0088cc; --dora-red: #e60012; }
-        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; font-family: 'Poppins', sans-serif; overflow: hidden; background: #000; color: #fff; }
+        :root { --accent: #ff4081; --dora-blue: #0088cc; }
+        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; font-family: 'Poppins', sans-serif; overflow: hidden; background: #050505; color: #fff; }
 
-        /* Gateway Phase */
+        /* Gateway Overlay */
         #gateway {
             position: absolute; inset: 0;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1558904541-efa843a96f0f?q=80&w=2000') center/cover;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 500; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1558904541-efa843a96f0f?q=80&w=2000') center/cover;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 500; transition: 1.5s ease-in-out;
         }
-        #dora-box {
+        #auth-card {
             background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 40px; 
             text-align: center; color: #333; width: 85%; max-width: 450px; border: 5px solid var(--dora-blue);
         }
-        #timer { font-family: 'Fira Code', monospace; font-size: 2.8rem; color: var(--dora-blue); margin: 20px 0; font-weight: bold; }
-        .dora-img { width: 140px; animation: bounce 3s infinite ease-in-out; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        #timer { font-family: 'Fira Code', monospace; font-size: 2.8rem; color: var(--dora-blue); margin: 15px 0; font-weight: bold; }
 
-        /* Garden Dashboard */
-        #garden-canvas {
+        /* Dashboard UI */
+        #dashboard {
             position: absolute; inset: 0; display: none;
             background: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=2000') center/cover;
-            filter: brightness(0.3); transition: 4s filter ease;
+            filter: brightness(0.4); transition: 3s filter ease;
         }
-        .node {
-            position: absolute; width: 70px; height: 70px; border-radius: 50%; border: 3px solid #fff;
-            background-size: cover; background-position: center; cursor: pointer; transform: translate(-50%, -50%); 
-            z-index: 10; box-shadow: 0 0 20px var(--dora-blue); transition: 0.4s;
-        }
-        #node-1 { bottom: 15%; left: 20%; background-image: url('https://images.unsplash.com/photo-1490750967868-88cb4aca8fbf?w=200'); }
-        #node-2 { bottom: 30%; left: 80%; background-image: url('https://images.unsplash.com/photo-1474403078171-841808b8b8ba?w=200'); }
-        #node-3 { bottom: 45%; left: 25%; background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200'); }
-        #node-4 { bottom: 60%; left: 75%; background-image: url('https://images.unsplash.com/photo-1533134486753-c833f0ed4866?w=200'); }
-        #node-5 { bottom: 75%; left: 30%; background-image: url('https://images.unsplash.com/photo-1501854140801-50d01674aa3e?w=200'); }
-        #node-cake { position: absolute; top: 10%; left: 50%; font-size: 5rem; display: none; transform: translate(-50%, -50%); cursor: pointer; z-index: 20; }
 
-        /* Story Panel */
+        /* Glassmorphism Sidebar */
+        #sidebar {
+            position: absolute; left: 20px; top: 20px; bottom: 20px; width: 200px;
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px);
+            border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px; display: flex; flex-direction: column; align-items: center; z-index: 50;
+        }
+        .sidebar-icon { width: 80px; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--dora-blue)); }
+
+        /* Interactive Nodes */
+        .node {
+            position: absolute; width: 80px; height: 80px; border-radius: 50%; border: 3px solid #fff;
+            background-size: cover; background-position: center; cursor: pointer; transform: translate(-50%, -50%); 
+            z-index: 10; box-shadow: 0 0 20px var(--accent); transition: 0.4s;
+        }
+        .node:hover { transform: translate(-50%, -50%) scale(1.2); box-shadow: 0 0 40px #fff; }
+
+        #node-1 { bottom: 20%; right: 25%; background-image: url('https://images.unsplash.com/photo-1490750967868-88cb4aca8fbf?w=200'); }
+        #node-2 { bottom: 40%; right: 40%; background-image: url('https://images.unsplash.com/photo-1474403078171-841808b8b8ba?w=200'); }
+        #node-3 { bottom: 60%; right: 20%; background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200'); }
+        #node-cake { position: absolute; top: 15%; left: 50%; font-size: 6rem; display: none; transform: translate(-50%, -50%); cursor: pointer; z-index: 100; animation: float 3s infinite; }
+        @keyframes float { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -60%) scale(1.1); } }
+
+        /* Memory Panel */
         #panel {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 85%; max-width: 600px; max-height: 80vh; overflow-y: auto;
-            background: rgba(0,0,0,0.9); backdrop-filter: blur(25px);
-            padding: 40px; border-radius: 30px; border: 2px solid var(--dora-blue);
+            width: 85%; max-width: 600px; background: rgba(0,0,0,0.9); backdrop-filter: blur(30px);
+            padding: 40px; border-radius: 35px; border: 2px solid var(--accent);
             text-align: center; display: none; z-index: 1000;
         }
-        
-        /* Music Control Bar */
-        #music-hub {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
-            padding: 10px 20px; border-radius: 50px; display: none; z-index: 2000;
-            border: 1px solid rgba(255, 255, 255, 0.2); align-items: center; gap: 15px;
-        }
-        #youtube-player { width: 200px; height: 30px; border-radius: 10px; overflow: hidden; opacity: 0.5; }
+
+        #music-player { position: fixed; bottom: -100px; visibility: hidden; }
     </style>
 </head>
 <body>
 
+    <div id="music-player"></div>
+
     <div id="gateway">
-        <div id="dora-box">
-            <img src="https://upload.wikimedia.org/wikipedia/en/b/bd/Doraemon_character.png" class="dora-img" alt="Doraemon">
-            <h2 style="font-family: 'Playfair Display';">Neeharika, are you ready?</h2>
+        <div id="auth-card">
+            <img src="https://upload.wikimedia.org/wikipedia/en/b/bd/Doraemon_character.png" width="120" alt="Doraemon">
+            <h2 style="font-family: 'Playfair Display'; margin-bottom: 0;">Accessing Archive...</h2>
             <div id="timer">00:00:00</div>
-            <p>Type the secret code or wait for the bloom...</p>
+            <p style="font-size: 0.8rem; color: #666;">Waiting for the Hidden Leaf Garden to bloom.</p>
         </div>
     </div>
 
-    <div id="garden-canvas">
-        <div class="node" id="node-1" onclick="showStory(0)"></div>
-        <div class="node" id="node-2" onclick="showStory(1)"></div>
-        <div class="node" id="node-3" onclick="showStory(2)"></div>
-        <div class="node" id="node-4" onclick="showStory(3)"></div>
-        <div class="node" id="node-5" onclick="showStory(4)"></div>
-        <div id="node-cake" onclick="finalCelebration()">🎂</div>
-    </div>
+    <div id="dashboard">
+        <div id="sidebar">
+            <img src="https://www.pngarts.com/files/3/Naruto-PNG-Transparent-Image.png" class="sidebar-icon" alt="Shinobi">
+            <p style="font-weight: 600; font-size: 0.9rem; color: #00ccff;">Shinobi: Neeharika</p>
+            <p style="font-size: 0.7rem; color: #ccc;">Level: Birthday Queen</p>
+            <hr style="width: 100%; border: 0.5px solid rgba(255,255,255,0.1); margin: 20px 0;">
+            <p style="font-size: 0.8rem; text-align: center;">Click the nodes to unlock the story chapters.</p>
+        </div>
 
-    <div id="music-hub">
-        <span style="font-size: 0.8rem; color: #00ccff;">Shinobi Radio 🎵</span>
-        <div id="youtube-player"></div>
+        <div class="node" id="node-1" onclick="showMem(0)"></div>
+        <div class="node" id="node-2" onclick="showMem(1)"></div>
+        <div class="node" id="node-3" onclick="showMem(2)"></div>
+        <div id="node-cake" onclick="startBoom()">🎂</div>
     </div>
 
     <div id="panel" onclick="this.style.display='none'">
-        <p id="panel-text" style="font-size: 1.2rem; line-height: 1.8;"></p>
-        <p style="font-size: 0.8rem; color: var(--dora-blue); margin-top: 20px;">[ Click anywhere to continue ]</p>
+        <p id="panel-text" style="font-size: 1.3rem; line-height: 1.8; font-weight: 300;"></p>
+        <p style="font-size: 0.8rem; color: var(--accent); margin-top: 20px;">[ Click to continue ]</p>
     </div>
 
     <script>
         let player;
-        const chapters = [
-            "In the golden haze of a September morning, I met someone remarkable: You. At first, it was nothing remarkable—just another conversation while the world passed by. But I sensed something different. [cite: 2026-01-20]",
-            "She didn’t just speak—she listened. Not the polite kind, but the kind that notices tremors in voices and the silent battles people carry. Her insight felt overwhelming at first, but it was just gentle attention. [cite: 2026-01-20]",
-            "Your favorite season is spring, and it suits you perfectly. 'I love spring because it whispers possibilities.' It’s about life itself, fragile and persistent, waiting to bloom. [cite: 2026-01-20]",
-            "Joy, observation, insight—they flow naturally from you. You observed a stray paper caught in the wind once and said, 'Even chaos can have rhythm.' I realized then you didn’t just see life—you felt it. [cite: 2026-01-20]",
-            "Because of personal reasons, I couldn’t always talk as much as I wanted. But I feel so secure talking to you. You are more than a memory—you are a season, a melody, a story unfolding. [cite: 2026-01-20]"
+        const story = [
+            "In the golden haze of a September morning, I met someone remarkable: You. At first, it was nothing remarkable—just another conversation. But I sensed something different. [cite: 2026-01-20]",
+            "She didn’t just speak—she listened. Not the polite kind, but the kind that notices tremors in voices and the silent battles people carry. [cite: 2026-01-20]",
+            "Joy, observation, insight—they flow naturally from you. You once said, 'Even chaos can have rhythm.' I realized then you didn’t just see life—you felt it. [cite: 2026-01-20]"
         ];
 
         function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', {
-                height: '30', width: '200',
+            player = new YT.Player('music-player', {
+                height: '0', width: '0',
                 videoId: '_n74n_Lh7Yw', // Aa Chal Ke Tujhe
-                playerVars: { 'autoplay': 0, 'controls': 1, 'loop': 1, 'playlist': '_n74n_Lh7Yw' }
+                playerVars: { 'autoplay': 0, 'loop': 1, 'playlist': '_n74n_Lh7Yw' }
             });
         }
 
         let keys = "";
         window.addEventListener('keydown', (e) => {
             keys += e.key;
-            if (keys.includes("123456")) { keys = ""; runBoom(); }
+            if (keys.includes("123456")) { keys = ""; ignite(); }
         });
 
         function updateTimer() {
             const bday = new Date('2026-02-21T00:00:00+05:30');
             const diff = bday - new Date();
-            if (diff <= 0) { runBoom(); return; }
+            if (diff <= 0) { ignite(); return; }
             const h = Math.floor(diff/3600000).toString().padStart(2,'0');
             const m = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
             const s = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
@@ -128,28 +131,33 @@
             setTimeout(updateTimer, 1000);
         }
 
-        function runBoom() {
+        function ignite() {
             if(player) player.playVideo();
             document.getElementById('gateway').style.opacity = '0';
-            document.getElementById('music-hub').style.display = 'flex';
             setTimeout(() => {
                 document.getElementById('gateway').style.display = 'none';
-                document.getElementById('garden-canvas').style.display = 'block';
+                document.getElementById('dashboard').style.display = 'block';
                 document.getElementById('node-cake').style.display = 'block';
-                document.getElementById('garden-canvas').style.filter = "brightness(0.9)";
+                document.getElementById('dashboard').style.filter = "brightness(0.9)";
             }, 1000);
         }
 
-        function showStory(i) {
-            document.getElementById('panel-text').innerText = chapters[i];
+        function showMem(i) {
+            document.getElementById('panel-text').innerText = story[i];
             document.getElementById('panel').style.display = 'block';
         }
 
-        function finalCelebration() {
+        function startBoom() {
             player.loadVideoById('m_p_i-D0s0M'); // Birthday Song
-            document.getElementById('panel-text').innerHTML = "<span style='color:var(--dora-red); font-size:2rem; font-family:Playfair Display;'>HAPPY BIRTHDAY NEEHARIKA! 🌸</span><br><br>May this year be as vibrant as you are. [cite: 2026-01-20]";
+            document.getElementById('panel-text').innerHTML = "<span style='color:var(--accent); font-size:2.2rem; font-family:Playfair Display;'>BOOM! HAPPY BIRTHDAY! 🌸</span><br><br>May this year illuminate your world.";
             document.getElementById('panel').style.display = 'block';
-            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+            
+            // Firecracker Engine
+            var end = Date.now() + 15000;
+            (function frame() {
+                confetti({ particleCount: 10, spread: 70, origin: { x: Math.random(), y: Math.random() - 0.2 }, colors: ['#ff0000', '#00ff00', '#0000ff'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
         }
         updateTimer();
     </script>
