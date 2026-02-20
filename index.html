@@ -27,6 +27,10 @@
         }
         #timer { font-family: 'Fira Code', monospace; font-size: 3.5rem; color: #fff; margin: 20px 0; font-weight: bold; text-shadow: 0 0 30px var(--accent); }
 
+        /* The Fix: Interaction Button */
+        #start-btn { display: none; margin-top: 20px; padding: 15px 40px; background: var(--gold); color: #000; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,215,0,0.4); } 70% { box-shadow: 0 0 0 20px rgba(255,215,0,0); } 100% { box-shadow: 0 0 0 0 rgba(255,215,0,0); } }
+
         #dashboard { position: absolute; inset: 0; display: none; background: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=2000') center/cover; filter: brightness(0.2); transition: 4s filter ease; }
 
         .node {
@@ -49,7 +53,7 @@
             width: 90%; max-width: 750px; background: rgba(10, 10, 10, 0.96); backdrop-filter: blur(50px);
             padding: 40px; border-radius: 30px; border: 1px solid var(--gold); text-align: center; display: none; z-index: 2000;
         }
-        #panel-text { font-size: 1.3rem; line-height: 1.8; color: #fff; font-weight: 300; }
+        #panel-text { font-size: 1.3rem; line-height: 1.8; color: #fff; font-weight: 300; white-space: pre-wrap; }
 
         #pdf-btn { display: none; margin-top: 25px; padding: 12px 30px; background: var(--gold); color: #000; border: none; border-radius: 25px; font-weight: 600; cursor: pointer; }
 
@@ -69,7 +73,8 @@
         <div id="auth-card">
             <h2 style="font-family: 'Playfair Display'; font-size: 2rem;">The Archive</h2>
             <div id="timer">00:00:00</div>
-            <p style="font-size: 0.8rem; opacity: 0.6;">Awaiting Midnight...</p>
+            <p id="sub-text" style="font-size: 0.8rem; opacity: 0.6;">Awaiting Midnight...</p>
+            <button id="start-btn" onclick="initiateGarden()">Begin Journey</button>
         </div>
     </div>
 
@@ -96,10 +101,30 @@
         let ytPlayer;
         let isReady = false;
 
+        function getYTId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        const introId = getYTId("https://youtube.com/shorts/H8MmANdFWcc?si=Bo1Sf86gwRabGJfO"); 
+        const bdayId = getYTId("https://youtube.com/shorts/qcB6z6nsC5k?si=21uip56aKwvV90tO");
+
+        const story = [
+            "In the golden haze of a September morning, I met her—Neeharika. At first, it was just another conversation while the world passed by.",
+            "She didn’t just speak—she listened. The kind that notices tremors in voices and silent battles.",
+            "Her favorite season is spring: 'I love spring because it whispers possibilities.'",
+            "Her joy is effortless. One of her favorite songs, Espresso Cherry Cherry Lady, played softly once.",
+            "I remember a small moment: a stray paper caught in the wind. 'It’s dancing,' she said. 'Even chaos can have rhythm.'",
+            "She has become more than a memory. She is a season, a melody, a story unfolding.",
+            "I carry her presence like sunlight, warming corners I didn’t know were cold.",
+            "I couldn’t always talk as much as I wanted due to personal reasons, but I feel so secure talking to you.",
+            "Today, on your birthday, I want to say: may this year be as vibrant as you are. Happy Birthday! 🌸"
+        ];
+
         function onYouTubeIframeAPIReady() {
             ytPlayer = new YT.Player('player', {
-                height: '90', width: '160',
-                videoId: 'H8MmANdFWcc', 
+                height: '90', width: '160', videoId: introId, 
                 playerVars: { 'autoplay': 0, 'controls': 1 },
                 events: { 'onReady': () => { isReady = true; } }
             });
@@ -107,21 +132,17 @@
 
         window.addEventListener('keydown', (e) => { if (e.key === '6') initiateGarden(); });
 
-        const story = [
-            "In the golden haze of a September morning, I met her—Neeharika. At first, it was just another online conversation while the world passed by. [cite: 2026-01-20]",
-            "She didn’t just speak—she listened. The kind that notices tremors in voices and silent battles. [cite: 2026-01-20]",
-            "Her favorite season is spring: 'I love spring because it whispers possibilities.' [cite: 2026-01-20]",
-            "Her joy is effortless. One of her favorite songs, Espresso Cherry Cherry Lady, played softly once. [cite: 2026-01-20]",
-            "I remember a small moment: a stray paper caught in the wind. 'It’s dancing,' she said. 'Even chaos can have rhythm.' [cite: 2026-01-20]",
-            "She has become more than a memory. She is a season, a melody, a story unfolding. [cite: 2026-01-20]",
-            "I carry her presence like sunlight, warming corners I didn’t know were cold. [cite: 2026-01-20]",
-            "I couldn’t always talk as much as I wanted due to personal reasons, but I feel so secure talking to you. [cite: 2026-01-20]",
-            "Today, on your birthday, I want to say: may this year be as vibrant as you are. Happy Birthday! 🌸 [cite: 2026-01-20]"
-        ];
-
         function updateTimer() {
-            const diff = new Date('2026-02-21T00:00:00+05:30') - new Date();
-            if (diff <= 0) { document.getElementById('timer').innerText = "00:00:00"; initiateGarden(); return; }
+            const bday = new Date('2026-02-21T00:00:00+05:30');
+            const diff = bday - new Date();
+            
+            if (diff <= 0) {
+                document.getElementById('timer').innerText = "00:00:00";
+                document.getElementById('sub-text').innerText = "The bloom is ready.";
+                document.getElementById('start-btn').style.display = 'inline-block';
+                return;
+            }
+            
             document.getElementById('timer').innerText = new Date(diff).toISOString().substr(11, 8);
             setTimeout(updateTimer, 1000);
         }
@@ -138,7 +159,7 @@
         function typeWriter(text, i, cb) {
             if (i < text.length) {
                 document.getElementById("panel-text").innerHTML = text.substring(0, i+1) + '<span class="typing"></span>';
-                setTimeout(() => typeWriter(text, i + 1, cb), 15);
+                setTimeout(() => typeWriter(text, i + 1, cb), 20);
             } else if (cb) cb();
         }
 
@@ -152,19 +173,13 @@
 
         function cakeBoom() {
             document.getElementById('main-body').classList.add('shake');
-            if(isReady) ytPlayer.loadVideoById('qcB6z6nsC5k');
+            if(isReady) ytPlayer.loadVideoById(bdayId);
             document.getElementById('panel').style.display = 'block';
-            
-            const longMessage = "HAPPY BIRTHDAY NEEHARIKA! 🌸\n\nMay this year be as radiant, joyful, and full of beautiful surprises as you are. Today is a celebration of the light you bring into the world. [cite: 2026-01-20]";
-            
-            typeWriter(longMessage, 0, () => {
-                document.getElementById('pdf-btn').style.display = 'inline-block';
-            });
-
-            var duration = 20 * 1000;
-            var end = Date.now() + duration;
+            const msg = "HAPPY BIRTHDAY NEEHARIKA! 🌸\n\nYou are the most beautiful melody I’ve ever found. May your year be as radiant as your spirit. This garden and every word here... they are all for you.";
+            typeWriter(msg, 0, () => { document.getElementById('pdf-btn').style.display = 'inline-block'; });
+            var end = Date.now() + 15000;
             (function frame() {
-                confetti({ particleCount: 8, spread: 80, origin: { y: 0.6 }, colors: ['#ffd700', '#ff4081'] });
+                confetti({ particleCount: 10, spread: 85, origin: { y: 0.6 }, colors: ['#ffd700', '#ff4081'] });
                 if (Date.now() < end) requestAnimationFrame(frame);
             }());
         }
@@ -175,7 +190,7 @@
             doc.setFontSize(22); doc.text("For Neeharika", 105, 30, { align: "center" });
             doc.setFontSize(12); let y = 50;
             story.forEach(s => {
-                let lines = doc.splitTextToSize(s.replace(/\/g, ""), 170); doc.text(lines, 20, y);
+                let lines = doc.splitTextToSize(s, 170); doc.text(lines, 20, y);
                 y += (lines.length * 7) + 10;
             });
             doc.save("Story_for_Neeharika.pdf");
