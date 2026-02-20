@@ -12,7 +12,7 @@
         :root { --gold: #ffd700; --accent: #ff4081; }
         body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; font-family: 'Poppins', sans-serif; overflow: hidden; background: #000; color: #fff; }
 
-        /* Gateway Phase */
+        /* Gateway Overlay */
         #gateway {
             position: absolute; inset: 0;
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1558904541-efa843a96f0f?q=80&w=2000') center/cover;
@@ -40,7 +40,7 @@
         }
         .node:hover { transform: translate(-50%, -50%) scale(1.2); border-color: var(--gold); box-shadow: 0 0 30px var(--gold); }
 
-        /* Numbered Node Map */
+        /* Sequence-Based Numbered Nodes */
         #node-1 { bottom: 10%; left: 20%; } #node-2 { bottom: 20%; left: 80%; }
         #node-3 { bottom: 30%; left: 30%; } #node-4 { bottom: 40%; left: 70%; }
         #node-5 { bottom: 50%; left: 20%; } #node-6 { bottom: 60%; left: 80%; }
@@ -50,7 +50,7 @@
         #node-cake { position: absolute; top: 15%; left: 50%; font-size: 5rem; display: none; transform: translate(-50%, -50%); cursor: pointer; z-index: 100; animation: float 3s infinite; }
         @keyframes float { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -60%) scale(1.1); } }
 
-        /* Story Overlay */
+        /* Story Panel */
         #panel {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 85%; max-width: 650px; background: rgba(0,0,0,0.92); backdrop-filter: blur(35px);
@@ -58,8 +58,8 @@
             text-align: center; display: none; z-index: 1000;
         }
 
-        /* YouTube Container */
-        #yt-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 2000; opacity: 0.8; display: none; }
+        /* Mini YouTube Hub */
+        #yt-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 2000; opacity: 0.9; display: none; background: #000; padding: 5px; border-radius: 12px; border: 1px solid var(--gold); }
     </style>
 </head>
 <body>
@@ -95,21 +95,21 @@
     <script>
         let ytPlayer;
         const storySegments = [
-            "In the golden haze of a September morning, I was traveling, wandering through streets I barely knew, when I met her—Neeharika. At first, it was nothing remarkable. Just another online conversation while the world passed by. [cite: 2026-01-20]",
-            "She didn’t just speak—she listened. The kind that notices tremors in voices, the hesitation behind smiles, the silent battles that people carry in their chests. [cite: 2026-01-20]",
-            "Her favorite season is spring: 'I love spring because it whispers possibilities.' It’s about life itself, fragile and persistent, waiting to bloom. [cite: 2026-01-20]",
-            "Her joy is effortless. One of her favorite songs, Espresso Cherry Cherry Lady, played softly once—playful and bright, just like her. [cite: 2026-01-20]",
-            "I remember a small moment: a stray paper caught in the wind. 'It’s dancing,' she said. 'Even chaos can have rhythm.' I realized she didn’t just see—she felt. [cite: 2026-01-20]",
-            "She has become more than a memory. She is a season, a melody, a story unfolding in real time. People like her illuminate it. [cite: 2026-01-20]",
-            "I carry her presence like sunlight, warming corners I didn’t know were cold. [cite: 2026-01-20]",
-            "I couldn’t always talk as much as I wanted due to personal reasons, but I feel so comfortable and secure talking to you. That’s rare. [cite: 2026-01-20]",
-            "Today, on your birthday, I want to say: may this year be as vibrant, joyful, and full of possibilities as you are. 🌸 [cite: 2026-01-20]"
+            "In the golden haze of a September morning, I met someone remarkable: You. At first, it was nothing remarkable—just another conversation.",
+            "She didn’t just speak—she listened. Not the polite kind, but the kind that notices tremors in voices.",
+            "Her favorite season is spring: 'I love spring because it whispers possibilities.'",
+            "Her joy is effortless. One of her favorite songs, Espresso Cherry Cherry Lady, played softly once.",
+            "I remember a small moment: a stray paper caught in the wind. 'It’s dancing,' she said.",
+            "She has become more than a memory—a season, a melody, a story unfolding.",
+            "I carry her presence like sunlight, warming corners I didn’t know were cold.",
+            "I couldn’t always talk as much as I wanted, but I feel so comfortable talking to you.",
+            "Today, I want to say: may this year be as vibrant as you are. Happy Birthday! 🌸"
         ];
 
         function onYouTubeIframeAPIReady() {
             ytPlayer = new YT.Player('player', {
-                height: '40', width: '200',
-                videoId: 'Y_8VmzWOsgs', // Your Aa Chal Ke Tujhe Link
+                height: '45', width: '220',
+                videoId: 'Y_8VmzWOsgs', // Aa Chal Ke Tujhe
                 playerVars: { 'autoplay': 0, 'controls': 1, 'loop': 1, 'playlist': 'Y_8VmzWOsgs' }
             });
         }
@@ -148,14 +148,15 @@
         }
 
         function cakeBoom() {
-            // Force play your Happy Birthday Link
+            // Switches to Happy Birthday Link
             ytPlayer.loadVideoById('5u4xTa3LR2U');
-            document.getElementById('panel-text').innerHTML = "<span style='color:var(--gold); font-size:2.5rem; font-family:Playfair Display;'>BOOM! HAPPY BIRTHDAY NEEHARIKA! 🌸</span>";
+            document.getElementById('panel-text').innerHTML = "<span style='color:var(--gold); font-size:2.2rem; font-family:Playfair Display;'>BOOM! HAPPY BIRTHDAY NEEHARIKA! 🌸</span>";
             document.getElementById('panel').style.display = 'block';
             
+            // Confetti Engine
             var end = Date.now() + 15000;
             (function frame() {
-                confetti({ particleCount: 15, spread: 80, origin: { x: Math.random(), y: Math.random() - 0.2 }, colors: ['#ffd700', '#ff4081'] });
+                confetti({ particleCount: 15, spread: 85, origin: { x: Math.random(), y: Math.random() - 0.2 }, colors: ['#ffd700', '#ff4081'] });
                 if (Date.now() < end) requestAnimationFrame(frame);
             }());
         }
