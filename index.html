@@ -130,7 +130,15 @@
             });
         }
 
-        window.addEventListener('keydown', (e) => { if (e.key === '6') initiateGarden(); }); 
+        // UNIVERSAL BYPASS: Type 6 or 123456 to force start
+        let buffer = "";
+        window.addEventListener('keydown', (e) => { 
+            buffer += e.key;
+            if (e.key === '6' || buffer.includes("123456")) { 
+                buffer = "";
+                initiateGarden(); 
+            }
+        }); 
 
         function updateTimer() {
             const now = new Date();
@@ -139,8 +147,7 @@
             
             if (diff <= 0) {
                 document.getElementById('timer').innerText = "00:00:00";
-                initiateGarden();
-                return;
+                return; // Auto-trigger disabled to allow manual "6" bypass if needed
             }
             
             const h = Math.floor(diff/3600000).toString().padStart(2,'0');
@@ -154,7 +161,12 @@
             if(isPlayerReady) ytPlayer.playVideo();
             document.getElementById('gateway').style.opacity = '0';
             document.getElementById('yt-wrapper').style.display = 'block';
-            setTimeout(() => { document.getElementById('gateway').style.display = 'none'; document.getElementById('dashboard').style.display = 'block'; document.getElementById('node-cake').style.display = 'block'; document.getElementById('dashboard').style.filter = "brightness(1)"; }, 1500);
+            setTimeout(() => { 
+                document.getElementById('gateway').style.display = 'none'; 
+                document.getElementById('dashboard').style.display = 'block'; 
+                document.getElementById('node-cake').style.display = 'block'; 
+                document.getElementById('dashboard').style.filter = "brightness(1)"; 
+            }, 1500);
         }
 
         function typeWriter(text, i, fnCallback) {
