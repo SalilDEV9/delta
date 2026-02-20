@@ -34,6 +34,7 @@
         }
         .node:hover { transform: translate(-50%, -50%) scale(1.2); border-color: var(--gold); }
 
+        /* Story Sequence Nodes */
         #node-1 { bottom: 10%; left: 20%; } #node-2 { bottom: 20%; left: 80%; }
         #node-3 { bottom: 30%; left: 30%; } #node-4 { bottom: 40%; left: 70%; }
         #node-5 { bottom: 50%; left: 20%; } #node-6 { bottom: 60%; left: 80%; }
@@ -54,7 +55,11 @@
             border: none; border-radius: 25px; font-weight: 600; cursor: pointer; transition: 0.3s;
         }
 
-        #yt-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 2000; opacity: 0.8; display: none; }
+        #yt-wrapper { 
+            position: fixed; bottom: 20px; right: 20px; z-index: 2000; 
+            background: #000; padding: 10px; border-radius: 15px; 
+            border: 1px solid var(--gold); display: none;
+        }
     </style>
 </head>
 <body>
@@ -64,7 +69,7 @@
     <div id="gateway">
         <h2 style="font-family: 'Playfair Display';">Neeharika's Archive</h2>
         <div id="timer">00:00:00</div>
-        <p style="font-size: 0.8rem; color: #ccc;">T-minus to the Midnight Bloom...</p>
+        <p style="font-size: 0.8rem; color: #ccc;">Awaiting the Midnight Bloom...</p>
     </div>
 
     <div id="dashboard">
@@ -88,6 +93,15 @@
 
     <script>
         let ytPlayer;
+        function getYTId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        const introId = getYTId("https://youtube.com/shorts/H8MmANdFWcc?si=Bo1Sf86gwRabGJfO"); 
+        const bdayId = getYTId("https://youtube.com/shorts/qcB6z6nsC5k?si=21uip56aKwvV90tO");
+
         const storySegments = [
             "In the golden haze of a September morning, I was traveling, wandering through streets I barely knew, when I met her—Neeharika. At first, it was nothing remarkable. Just another online conversation while the world passed by. [cite: 2026-01-20]",
             "She didn’t just speak—she listened. The kind that notices tremors in voices, the hesitation behind smiles, the silent battles that people carry in their chests. [cite: 2026-01-20]",
@@ -101,10 +115,14 @@
         ];
 
         function onYouTubeIframeAPIReady() {
-            ytPlayer = new YT.Player('player', { height: '40', width: '200', videoId: 'Y_8VmzWOsgs', playerVars: { 'autoplay': 0, 'controls': 1, 'loop': 1, 'playlist': 'Y_8VmzWOsgs' } });
+            ytPlayer = new YT.Player('player', { height: '100', width: '180', videoId: introId, playerVars: { 'autoplay': 0, 'controls': 1, 'loop': 1, 'playlist': introId } });
         }
 
-        window.addEventListener('keydown', (e) => { if (e.key === '6') initiateGarden(); }); // Quick bypass check
+        let inputLog = "";
+        window.addEventListener('keydown', (e) => {
+            inputLog += e.key;
+            if (inputLog.includes("123456")) { inputLog = ""; initiateGarden(); }
+        });
 
         function updateTimer() {
             const diff = new Date('2026-02-21T00:00:00+05:30') - new Date();
@@ -129,25 +147,26 @@
         function closePanel() { document.getElementById('panel').style.display = 'none'; }
 
         function cakeBoom() {
-            ytPlayer.loadVideoById('5u4xTa3LR2U');
-            document.getElementById('panel-text').innerHTML = "<span style='color:var(--gold); font-size:2rem;'>HAPPY BIRTHDAY NEEHARIKA! 🌸</span>";
+            ytPlayer.loadVideoById(bdayId);
+            document.getElementById('panel-text').innerHTML = "<span style='color:var(--gold); font-size:2.5rem; font-family:Playfair Display;'>BOOM! HAPPY BIRTHDAY NEEHARIKA! 🌸</span>";
             document.getElementById('pdf-btn').style.display = 'inline-block';
             document.getElementById('panel').style.display = 'block';
-            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+            var end = Date.now() + 15000;
+            (function frame() {
+                confetti({ particleCount: 15, spread: 85, origin: { x: Math.random(), y: Math.random() - 0.2 }, colors: ['#ffd700', '#ff4081'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
         }
 
         function downloadPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.setFont("times", "italic");
-            doc.setFontSize(22);
+            doc.setFont("times", "italic"); doc.setFontSize(22);
             doc.text("For Neeharika", 105, 30, { align: "center" });
-            doc.setFontSize(12);
-            doc.setFont("helvetica", "normal");
+            doc.setFontSize(12); doc.setFont("helvetica", "normal");
             let y = 50;
             storySegments.forEach(s => {
-                let lines = doc.splitTextToSize(s.replace(/\/g, ""), 170);
-                doc.text(lines, 20, y);
+                let lines = doc.splitTextToSize(s, 170); doc.text(lines, 20, y);
                 y += (lines.length * 7) + 5;
             });
             doc.save("Neeharikas_Story.pdf");
