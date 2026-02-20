@@ -55,8 +55,8 @@
 
         #pdf-btn { display: none; margin-top: 25px; padding: 12px 30px; background: var(--gold); color: #000; border: none; border-radius: 25px; font-weight: 600; cursor: pointer; }
 
-        /* RAW IFRAME WRAPPER */
-        #yt-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 5000; background: #000; padding: 5px; border-radius: 15px; border: 1px solid var(--gold); display: none; }
+        /* MINI PLAYER CSS */
+        #yt-wrapper { position: fixed; bottom: 15px; right: 15px; z-index: 5000; background: #000; padding: 4px; border-radius: 10px; border: 1px solid var(--gold); display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
 
         .shake { animation: shake 0.5s both; }
         @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
@@ -68,7 +68,7 @@
     <div class="bg-glow"></div>
     
     <div id="yt-wrapper">
-        <iframe id="yt-iframe" width="180" height="100" src="" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+        <iframe id="yt-iframe" width="80" height="45" src="" frameborder="0" allow="autoplay; encrypted-media"></iframe>
     </div>
 
     <div id="gateway">
@@ -127,7 +127,6 @@
         }
 
         function initiateGarden() {
-            // Raw URL Injection for "Aa Chal Ke Tujhe" (Looped)
             document.getElementById('yt-iframe').src = "https://www.youtube.com/embed/H8MmANdFWcc?autoplay=1&loop=1&playlist=H8MmANdFWcc";
             
             document.getElementById('gateway').style.display = 'none';
@@ -154,8 +153,6 @@
 
         function cakeBoom() {
             document.getElementById('main-body').classList.add('shake');
-            
-            // Raw URL Injection for Birthday Song (Looped)
             document.getElementById('yt-iframe').src = "https://www.youtube.com/embed/qcB6z6nsC5k?autoplay=1&loop=1&playlist=qcB6z6nsC5k";
             
             document.getElementById('panel').style.display = 'block';
