@@ -3,128 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neeharika's Hidden Garden</title>
+    <title>Neeharika's Birthday Story</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&family=Fira+Code&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     
     <style>
-        :root { --accent: #ff4081; --dora-blue: #0088cc; --gold: #ffd700; }
-        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; font-family: 'Poppins', sans-serif; overflow: hidden; background: #050505; color: #fff; }
+        :root { --accent: #ff4081; --gold: #ffd700; }
+        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; font-family: 'Poppins', sans-serif; overflow: hidden; background: #000; color: #fff; }
 
-        /* Gateway Overlay */
+        /* Gateway Screen */
         #gateway {
             position: absolute; inset: 0;
-            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url('https://images.unsplash.com/photo-1558904541-efa843a96f0f?q=80&w=2000') center/cover;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1558904541-efa843a96f0f?q=80&w=2000') center/cover;
             display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 500; transition: 1.5s ease-in-out;
         }
         #auth-card {
-            background: rgba(255, 255, 255, 0.98); padding: 45px; border-radius: 40px; 
-            text-align: center; color: #333; width: 85%; max-width: 450px; border: 6px solid var(--dora-blue);
-            box-shadow: 0 0 50px rgba(0,136,204,0.3);
+            background: rgba(255, 255, 255, 0.98); padding: 50px; border-radius: 40px; 
+            text-align: center; color: #333; width: 85%; max-width: 450px; border: 2px solid #ccc;
         }
-        #timer { font-family: 'Fira Code', monospace; font-size: 3rem; color: var(--dora-blue); margin: 15px 0; font-weight: bold; }
+        #timer { font-family: 'Fira Code', monospace; font-size: 3rem; color: #333; margin: 20px 0; font-weight: bold; }
 
-        /* Dashboard UI */
+        /* Story Garden Dashboard */
         #dashboard {
             position: absolute; inset: 0; display: none;
             background: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=2000') center/cover;
             filter: brightness(0.3); transition: 4s filter ease;
         }
 
-        /* Glassmorphism Sidebar */
-        #sidebar {
-            position: absolute; left: 20px; top: 20px; bottom: 20px; width: 220px;
-            background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px);
-            border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 25px; display: flex; flex-direction: column; align-items: center; z-index: 50;
-        }
-        .sidebar-icon { width: 90px; margin-bottom: 20px; filter: drop-shadow(0 0 15px var(--dora-blue)); animation: floatImg 3s infinite ease-in-out; }
-        @keyframes floatImg { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-        /* Interactive Garden Nodes */
         .node {
-            position: absolute; width: 85px; height: 85px; border-radius: 50%; border: 3px solid #fff;
+            position: absolute; width: 70px; height: 70px; border-radius: 50%; border: 2px solid #fff;
             background-size: cover; background-position: center; cursor: pointer; transform: translate(-50%, -50%); 
-            z-index: 10; box-shadow: 0 0 25px var(--accent); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10; box-shadow: 0 0 20px rgba(255,255,255,0.3); transition: 0.4s;
         }
-        .node:hover { transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 50px #fff; border-color: var(--gold); }
+        .node:hover { transform: translate(-50%, -50%) scale(1.2); border-color: var(--gold); box-shadow: 0 0 40px var(--gold); }
 
-        #node-1 { bottom: 20%; right: 30%; background-image: url('https://images.unsplash.com/photo-1490750967868-88cb4aca8fbf?w=200'); }
-        #node-2 { bottom: 45%; right: 45%; background-image: url('https://images.unsplash.com/photo-1474403078171-841808b8b8ba?w=200'); }
-        #node-3 { bottom: 70%; right: 25%; background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200'); }
+        /* Story Mapping */
+        #node-1 { bottom: 15%; left: 20%; background-image: url('https://images.unsplash.com/photo-1490750967868-88cb4aca8fbf?w=200'); }
+        #node-2 { bottom: 30%; left: 80%; background-image: url('https://images.unsplash.com/photo-1474403078171-841808b8b8ba?w=200'); }
+        #node-3 { bottom: 45%; left: 20%; background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200'); }
+        #node-4 { bottom: 60%; left: 80%; background-image: url('https://images.unsplash.com/photo-1533134486753-c833f0ed4866?w=200'); }
+        #node-5 { bottom: 75%; left: 20%; background-image: url('https://images.unsplash.com/photo-1501854140801-50d01674aa3e?w=200'); }
+        #node-6 { bottom: 85%; left: 80%; background-image: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200'); }
         
-        #node-cake { position: absolute; top: 15%; left: 55%; font-size: 6.5rem; display: none; transform: translate(-50%, -50%); cursor: pointer; z-index: 100; animation: cakeShake 3s infinite; filter: drop-shadow(0 0 20px var(--accent)); }
-        @keyframes cakeShake { 0%, 100% { transform: translate(-50%, -50%) rotate(0deg); } 50% { transform: translate(-50%, -60%) rotate(5deg); } }
+        #node-cake { position: absolute; top: 15%; left: 50%; font-size: 5rem; display: none; transform: translate(-50%, -50%); cursor: pointer; z-index: 100; animation: bounce 3s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -60%) scale(1.1); } }
 
-        /* Story Panel */
+        /* Memory Panel */
         #panel {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 85%; max-width: 650px; background: rgba(0,0,0,0.92); backdrop-filter: blur(35px);
-            padding: 45px; border-radius: 35px; border: 2px solid var(--gold);
-            text-align: center; display: none; z-index: 1000; box-shadow: 0 0 100px #000;
+            padding: 40px; border-radius: 30px; border: 1px solid var(--gold);
+            text-align: center; display: none; z-index: 1000;
         }
 
-        #music-player { position: fixed; bottom: -100px; visibility: hidden; }
-        
-        /* Floating Lanterns */
-        .lantern { position: absolute; background: rgba(255, 215, 0, 0.6); width: 15px; height: 25px; border-radius: 5px; animation: rise linear infinite; opacity: 0.4; }
-        @keyframes rise { from { transform: translateY(100vh); opacity: 0; } to { transform: translateY(-100px); opacity: 0.6; } }
+        /* Minimal Player Hub */
+        #player-hub {
+            position: fixed; bottom: 20px; right: 20px;
+            background: rgba(0,0,0,0.6); padding: 10px; border-radius: 150px;
+            display: none; border: 1px solid rgba(255,255,255,0.2); z-index: 2000;
+        }
     </style>
 </head>
 <body>
 
-    <div id="music-player"></div>
+    <div id="player-hub"><div id="yt-player"></div></div>
 
     <div id="gateway">
         <div id="auth-card">
-            <img src="https://upload.wikimedia.org/wikipedia/en/b/bd/Doraemon_character.png" width="130" alt="Doraemon">
-            <h2 style="font-family: 'Playfair Display'; font-size: 2rem; margin-top: 10px;">Archive Restricted</h2>
+            <h2 style="font-family: 'Playfair Display'; margin: 0;">Neeharika's Archive</h2>
             <div id="timer">00:00:00</div>
-            <p style="font-size: 0.9rem; color: #555;">Waiting for the Hidden Leaf Garden to bloom.</p>
+            <p style="font-size: 0.9rem; color: #888;">The garden awaits the strike of midnight.</p>
         </div>
     </div>
 
     <div id="dashboard">
-        <div id="sidebar">
-            <img src="https://www.pngarts.com/files/3/Naruto-PNG-Transparent-Image.png" class="sidebar-icon" alt="Shinobi">
-            <p style="font-weight: 600; font-size: 1rem; color: #00ccff; margin: 0;">Shinobi: Neeharika</p>
-            <p style="font-size: 0.75rem; color: #ccc; margin-top: 5px;">Rank: Birthday Hokage</p>
-            <hr style="width: 100%; border: 0.5px solid rgba(255,255,255,0.1); margin: 25px 0;">
-            <p style="font-size: 0.85rem; text-align: center; line-height: 1.6; font-style: italic;">"People like her don't merely enter your life—they illuminate it."</p>
-        </div>
-
-        <div class="node" id="node-1" onclick="showMem(0)"></div>
-        <div class="node" id="node-2" onclick="showMem(1)"></div>
-        <div class="node" id="node-3" onclick="showMem(2)"></div>
-        <div id="node-cake" onclick="startBoom()">🎂</div>
+        <div class="node" id="node-1" onclick="openStory(0)"></div>
+        <div class="node" id="node-2" onclick="openStory(1)"></div>
+        <div class="node" id="node-3" onclick="openStory(2)"></div>
+        <div class="node" id="node-4" onclick="openStory(3)"></div>
+        <div class="node" id="node-5" onclick="openStory(4)"></div>
+        <div class="node" id="node-6" onclick="openStory(5)"></div>
+        <div id="node-cake" onclick="triggerFinale()">🎂</div>
     </div>
 
     <div id="panel" onclick="this.style.display='none'">
-        <p id="panel-text" style="font-size: 1.35rem; line-height: 2; font-weight: 300;"></p>
-        <p style="font-size: 0.9rem; color: var(--gold); margin-top: 25px;">[ Click anywhere to continue ]</p>
+        <p id="panel-text" style="font-size: 1.25rem; line-height: 2; font-weight: 300;"></p>
+        <p style="font-size: 0.8rem; color: var(--gold); margin-top: 20px;">[ Click anywhere to continue ]</p>
     </div>
 
     <script>
         let player;
-        const story = [
-            "In the golden haze of a September morning, I met someone remarkable: You. At first, it was nothing remarkable—just another conversation. But I sensed something different. [cite: 2026-01-20]",
+        const storyChapters = [
+            "In the golden haze of a September morning, I met her—Neeharika. At first, it was nothing remarkable—just another online conversation while the world passed by. But I sensed something different. [cite: 2026-01-20]",
             "She didn’t just speak—she listened. Not the polite kind, but the kind that notices tremors in voices and the silent battles people carry. [cite: 2026-01-20]",
-            "Joy, observation, insight—they flow naturally from you. You once said, 'Even chaos can have rhythm.' I realized then you didn’t just see life—you felt it. [cite: 2026-01-20]"
+            "Her favorite season is spring: 'I love spring because it whispers possibilities.' It’s about life itself, fragile and persistent, waiting to bloom. [cite: 2026-01-20]",
+            "Joy, observation, insight—they flow naturally from her. She once said, 'Even chaos can have rhythm.' I realized then she didn’t just see—she felt. [cite: 2026-01-20]",
+            "She is more than a memory—she is a season, a melody, a story unfolding in real time. People like her don’t merely enter your life—they illuminate it. [cite: 2026-01-20]",
+            "Even through all the ups and downs, I feel so secure talking to you. That’s rare, and it’s something I treasure deeply. [cite: 2026-01-20]"
         ];
 
         function onYouTubeIframeAPIReady() {
-            player = new YT.Player('music-player', {
-                height: '0', width: '0',
-                videoId: 'uS3XvS8w6pU', // Embed-friendly cover of Aa Chal Ke Tujhe
-                playerVars: { 'autoplay': 0, 'loop': 1, 'playlist': 'uS3XvS8w6pU' }
+            player = new YT.Player('yt-player', {
+                height: '40', width: '200',
+                videoId: 'Y_8VmzWOsgs', // Aa Chal Ke Tujhe
+                playerVars: { 'autoplay': 0, 'controls': 1, 'loop': 1, 'playlist': 'Y_8VmzWOsgs' }
             });
         }
 
-        let keys = "";
+        let inputLog = "";
         window.addEventListener('keydown', (e) => {
-            keys += e.key;
-            if (keys.includes("123456")) { keys = ""; ignite(); }
+            inputLog += e.key;
+            if (inputLog.includes("123456")) { inputLog = ""; ignite(); }
         });
 
         function updateTimer() {
@@ -141,41 +131,31 @@
         function ignite() {
             if(player) player.playVideo();
             document.getElementById('gateway').style.opacity = '0';
+            document.getElementById('player-hub').style.display = 'block';
             setTimeout(() => {
                 document.getElementById('gateway').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
                 document.getElementById('node-cake').style.display = 'block';
                 document.getElementById('dashboard').style.filter = "brightness(1)";
-                spawnLanterns();
             }, 1000);
         }
 
-        function showMem(i) {
-            document.getElementById('panel-text').innerText = story[i];
+        function openStory(i) {
+            document.getElementById('panel-text').innerText = storyChapters[i];
             document.getElementById('panel').style.display = 'block';
         }
 
-        function startBoom() {
-            player.loadVideoById('W9XGvWf80mE'); // Embed-friendly Happy Birthday Song
-            document.getElementById('panel-text').innerHTML = "<span style='color:var(--gold); font-size:2.5rem; font-family:Playfair Display;'>BOOM! HAPPY BIRTHDAY! 🌸</span><br><br>May this year illuminate your world just as you illuminate ours. [cite: 2026-01-20]";
+        function triggerFinale() {
+            player.loadVideoById('5u4xTa3LR2U'); // Happy Birthday Song
+            document.getElementById('panel-text').innerHTML = "<span style='color:var(--gold); font-size:2.2rem; font-family:Playfair Display;'>HAPPY BIRTHDAY NEEHARIKA! 🌸</span><br><br>May this year illuminate your world. [cite: 2026-01-20]";
             document.getElementById('panel').style.display = 'block';
             
-            var end = Date.now() + 15000;
+            var duration = 15 * 1000;
+            var end = Date.now() + duration;
             (function frame() {
-                confetti({ particleCount: 12, spread: 80, origin: { x: Math.random(), y: Math.random() - 0.2 }, colors: ['#ffd700', '#ff4081', '#00ccff'] });
+                confetti({ particleCount: 7, spread: 70, origin: { x: Math.random(), y: Math.random() - 0.2 }, colors: ['#ffd700', '#ff4081'] });
                 if (Date.now() < end) requestAnimationFrame(frame);
             }());
-        }
-
-        function spawnLanterns() {
-            for(let i=0; i<25; i++) {
-                let l = document.createElement('div');
-                l.className = 'lantern';
-                l.style.left = Math.random() * 100 + 'vw';
-                l.style.animationDuration = (Math.random() * 10 + 10) + 's';
-                l.style.animationDelay = (Math.random() * 5) + 's';
-                document.body.appendChild(l);
-            }
         }
         updateTimer();
     </script>
