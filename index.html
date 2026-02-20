@@ -3,52 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For Neeharika</title>
+    <title>Happy Birthday, Neeharika</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
     <style>
         body {
-            margin: 0; padding: 0; font-family: 'Georgia', serif;
-            background-color: #0a0a0a; color: #00ff00;
-            transition: background-color 4s ease, color 4s ease;
+            margin: 0; padding: 0; 
+            font-family: 'Lora', serif;
+            background: linear-gradient(45deg, #ff9a9e, #fecfef, #f6e2b7, #a1c4fd);
+            background-size: 400% 400%;
+            color: #3e2723;
             overflow-x: hidden;
         }
 
-        /* Terminal Phase */
-        #terminal {
+        /* Animated gradient background */
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .theme-spring { animation: gradientFlow 15s ease infinite; }
+
+        h1, h2 { font-family: 'Playfair Display', serif; font-weight: 600; color: #d81b60; }
+        p { font-size: 1.3rem; line-height: 2.2; max-width: 800px; margin: 0 auto; }
+
+        /* Gateway Phase */
+        #gateway {
             display: flex; flex-direction: column; justify-content: center; 
-            align-items: center; height: 100vh; font-family: monospace;
+            align-items: center; height: 100vh; text-align: center;
+            background-color: #fdfbf7; transition: opacity 2s ease;
         }
-        button {
-            padding: 15px 30px; margin-top: 20px; background: transparent; 
-            color: inherit; border: 1px solid currentColor; cursor: pointer;
-            font-size: 1.2rem; transition: 0.3s;
+        
+        .btn {
+            padding: 15px 35px; margin-top: 20px; background: #ff8fb3; 
+            color: white; border: none; border-radius: 30px; cursor: pointer;
+            font-family: 'Lora', serif; font-size: 1.2rem; 
+            transition: all 0.4s ease; box-shadow: 0 10px 20px rgba(255, 143, 179, 0.4);
         }
-        button:hover { background: currentColor; color: #0a0a0a; }
+        .btn:hover { background: #ff4081; transform: translateY(-3px); }
 
-        /* Story Phase */
-        #narrative {
-            display: none; opacity: 0; padding: 10vh 15vw;
-            font-size: 1.4rem; line-height: 2; transition: opacity 3s ease;
-        }
-        .story-section { min-height: 80vh; display: flex; align-items: center; }
+        #narrative { display: none; padding: 10vh 10vw; text-align: center; }
+        .story-section { min-height: 85vh; display: flex; align-items: center; justify-content: center; padding: 20px;}
 
-        /* Themes */
-        .theme-golden { background-color: #d4af37; color: #2c2c2c; }
-        .theme-spring { background-color: #fce4ec; color: #3e2723; }
-
-        /* Dancing Paper Animation */
-        .paper {
-            position: fixed; width: 20px; height: 25px; background: rgba(255,255,255,0.7);
-            top: -50px; left: 50%; opacity: 0;
-            animation: dance 8s infinite linear; pointer-events: none;
+        /* Cinematic Text Reveal */
+        .fade-up {
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 1.5s ease, transform 1.5s ease;
         }
-        @keyframes dance {
-            0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 1; }
-            50% { transform: translateY(50vh) rotate(180deg) translateX(50px); }
-            100% { transform: translateY(100vh) rotate(360deg) translateX(-50px); opacity: 0; }
-        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-        /* Vault Result */
-        #vault-result { font-style: italic; font-weight: bold; margin-top: 5vh; white-space: pre-wrap;}
+        /* Final Wish Styling */
+        .final-wish { font-size: 1.8rem; color: #d81b60; font-family: 'Playfair Display', serif; margin-top: 30px; }
+
+        /* Confetti Engine */
+        .confetti {
+            position: fixed; top: -10px; border-radius: 4px; pointer-events: none;
+            animation: fall linear infinite; opacity: 0;
+        }
+        @keyframes fall { 
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } 
+        }
     </style>
 </head>
 <body>
@@ -57,72 +71,79 @@
         <source src="espresso.mp3" type="audio/mpeg"> 
     </audio>
 
-    <div id="terminal">
-        <h2>SYSTEM LOCKED</h2>
-        <p>Awaiting Protocol Execution...</p>
-        <button onclick="initiateSequence()">Execute: ./run_neeharika_protocol</button>
+    <div id="gateway">
+        <h2>For Neeharika</h2>
+        <button class="btn" onclick="initiateSequence()">Begin Journey</button>
     </div>
 
-    <div class="paper" id="stray-paper"></div>
-
     <div id="narrative">
-        <div class="story-section">
+        <div class="story-section fade-up">
             <p>In the golden haze of a September morning, I was traveling, wandering through streets I barely knew, when I met her—Neeharika. At first, it was nothing remarkable. Just another online conversation while the world passed by outside my window.</p>
         </div>
-        <div class="story-section">
-            <p>But even in those first two days, I sensed something different about her. She didn’t just speak—she listened. Not the polite nod-and-smile kind of listening, but the kind that notices tremors in voices, the hesitation behind smiles...</p>
+        <div class="story-section fade-up">
+            <p>But even in those first two days, I sensed something different about her. She didn’t just speak—she listened. Not the polite nod-and-smile kind of listening, but the kind that notices tremors in voices, the hesitation behind smiles, the silent battles that people carry in their chests.</p>
         </div>
-        <div class="story-section" id="spring-trigger">
+        <div class="story-section fade-up">
+            <p>Her joy is effortless. Not loud or performative, but a quiet, radiant energy that slips past walls. I remember a small moment: a stray paper caught in the wind. <em>“It’s dancing,”</em> she said. <em>“Even chaos can have rhythm.”</em></p>
+        </div>
+        <div class="story-section fade-up">
             <p>Her favorite season is spring, and it suits her perfectly. There’s a rhythm to her presence, a cadence that mirrors renewal itself. Joy, observation, insight—they flow naturally from her.</p>
         </div>
-        <div class="story-section">
-            <p>Because of personal reasons and circumstances, I couldn’t always talk as much as I wanted. But even through all the ups and downs, I feel so comfortable and secure talking to you. That’s rare—and it’s something I treasure deeply.</p>
-            <div id="vault-box">
-                <button onclick="unlockVault()">Decrypt Final Message</button>
-                <p id="vault-result"></p>
+        <div class="story-section fade-up">
+            <div>
+                <p>Because of personal reasons and circumstances, I couldn’t always talk as much as I wanted. But even through all the ups and downs, I feel so comfortable and secure talking to you. That’s rare—and it’s something I treasure deeply.</p>
+                
+                <h1 class="final-wish">Happy Birthday, Neeharika. 🌸</h1>
+                <p>May this year be as vibrant, joyful, and full of possibilities as you are. You don't just enter lives—you illuminate them.</p>
             </div>
         </div>
     </div>
 
     <script>
         function initiateSequence() {
-            document.getElementById('bg-music').play().catch(e => console.log("Audio needs interaction"));
+            // Audio Protocol
+            const audio = document.getElementById('bg-music');
+            audio.volume = 0.4;
+            audio.play().catch(e => console.log("Audio interaction required."));
             
-            document.getElementById('terminal').style.display = 'none';
-            const narrative = document.getElementById('narrative');
-            narrative.style.display = 'block';
+            // UI Transition
+            const gateway = document.getElementById('gateway');
+            gateway.style.opacity = '0';
             
             setTimeout(() => {
-                document.body.className = 'theme-golden';
-                narrative.style.opacity = 1;
-                document.getElementById('stray-paper').style.opacity = 1;
-            }, 100);
+                gateway.style.display = 'none';
+                document.getElementById('narrative').style.display = 'block';
+                document.body.classList.add('theme-spring');
+                createConfetti();
+            }, 1500);
         }
 
-        // Scroll listener for Spring theme transition
-        window.addEventListener('scroll', () => {
-            const trigger = document.getElementById('spring-trigger');
-            const rect = trigger.getBoundingClientRect();
-            if (rect.top < window.innerHeight / 1.5) {
-                document.body.className = 'theme-spring';
-            } else {
-                document.body.className = 'theme-golden';
-            }
+        // Cinematic Scroll Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { root: null, rootMargin: '0px', threshold: 0.3 });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
         });
 
-        // Backend API Call
-        async function unlockVault() {
-            const resultBox = document.getElementById('vault-result');
-            resultBox.innerText = "Decrypting...";
-            
-            const WORKER_URL = "https://neeharika-vault.saliljha523.workers.dev/"; 
-
-            try {
-                const response = await fetch(WORKER_URL);
-                const data = await response.json();
-                resultBox.innerText = data.message;
-            } catch (error) {
-                resultBox.innerText = "Error connecting to the vault. Please try again.";
+        // Confetti Engine
+        function createConfetti() {
+            const colors = ['#ff9a9e', '#fecfef', '#a1c4fd', '#ffeb3b', '#ff4081'];
+            for(let i=0; i<40; i++) {
+                let p = document.createElement('div');
+                p.className = 'confetti';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.width = Math.random() * 10 + 5 + 'px';
+                p.style.height = Math.random() * 20 + 10 + 'px';
+                p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                p.style.animationDuration = Math.random() * 3 + 3 + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(p);
             }
         }
     </script>
