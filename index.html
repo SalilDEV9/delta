@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@300;400;600&family=Fira+Code&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://www.youtube.com/iframe_api"></script>
     
     <style>
         :root { --gold: #ffd700; --accent: #ff4081; --glass: rgba(255, 255, 255, 0.08); }
@@ -56,8 +55,8 @@
 
         #pdf-btn { display: none; margin-top: 25px; padding: 12px 30px; background: var(--gold); color: #000; border: none; border-radius: 25px; font-weight: 600; cursor: pointer; }
 
-        /* FIX: Player wrapper is now physically present but invisible until called */
-        #yt-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 5000; background: #000; padding: 5px; border-radius: 15px; border: 1px solid var(--gold); opacity: 0; pointer-events: none; transition: opacity 1.5s ease; }
+        /* RAW IFRAME WRAPPER */
+        #yt-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 5000; background: #000; padding: 5px; border-radius: 15px; border: 1px solid var(--gold); display: none; }
 
         .shake { animation: shake 0.5s both; }
         @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
@@ -67,7 +66,10 @@
 </head>
 <body id="main-body">
     <div class="bg-glow"></div>
-    <div id="yt-wrapper"><div id="player"></div></div>
+    
+    <div id="yt-wrapper">
+        <iframe id="yt-iframe" width="180" height="100" src="" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+    </div>
 
     <div id="gateway">
         <div id="auth-card">
@@ -98,18 +100,6 @@
     </div>
 
     <script>
-        let ytPlayer;
-        let isReady = false;
-
-        function getYTId(url) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
-
-        const introId = getYTId("https://youtube.com/shorts/H8MmANdFWcc?si=1FgsLVJ-Hj2Fcg6D"); 
-        const bdayId = getYTId("https://youtube.com/shorts/qcB6z6nsC5k?si=-r07yS15PL54UWXw");
-
         const story = [
             "In the golden haze of a September morning, I met her—Neeharika. At first, it was just another conversation while the world passed by.",
             "She didn’t just speak—she listened. The kind that notices tremors in voices and silent battles.",
@@ -119,43 +109,31 @@
             "She has become more than a memory. She is a season, a melody, a story unfolding.",
             "I carry her presence like sunlight, warming corners I didn’t know were cold.",
             "I couldn’t always talk as much as I wanted due to personal reasons, but I feel so secure talking to you.",
-            "Today, on your birthday, I want to say: may this year be as vibrant as you are. Happy Birthday! 🌸"
+            "Today, on your birthday, I want to say: may this year be as vibrant as you are. 🌸"
         ];
-
-        function onYouTubeIframeAPIReady() {
-            ytPlayer = new YT.Player('player', {
-                height: '90', width: '160', videoId: introId, 
-                playerVars: { 'autoplay': 0, 'controls': 1 },
-                events: { 'onReady': () => { isReady = true; } }
-            });
-        }
 
         window.addEventListener('keydown', (e) => { if (e.key === '6') initiateGarden(); });
 
         function updateTimer() {
-            const bday = new Date('2026-02-21T00:00:00+05:30');
-            const diff = bday - new Date();
-            
-            if (diff <= 0) {
-                document.getElementById('timer').innerText = "00:00:00";
+            const diff = new Date('2026-02-21T00:00:00+05:30') - new Date();
+            if (diff <= 0) { 
+                document.getElementById('timer').innerText = "00:00:00"; 
                 document.getElementById('sub-text').innerText = "The bloom is ready.";
                 document.getElementById('start-btn').style.display = 'inline-block';
-                return;
+                return; 
             }
-            
             document.getElementById('timer').innerText = new Date(diff).toISOString().substr(11, 8);
             setTimeout(updateTimer, 1000);
         }
 
         function initiateGarden() {
-            if(isReady) ytPlayer.playVideo();
+            // Raw URL Injection for Intro Song
+            document.getElementById('yt-iframe').src = "https://www.youtube.com/embed/H8MmANdFWcc?autoplay=1";
+            
             document.getElementById('gateway').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
             document.getElementById('node-cake').style.display = 'block';
-            
-            // Fade in the player smoothly
-            document.getElementById('yt-wrapper').style.opacity = '1';
-            document.getElementById('yt-wrapper').style.pointerEvents = 'auto';
+            document.getElementById('yt-wrapper').style.display = 'block';
             document.getElementById('dashboard').style.filter = "brightness(1)";
         }
 
@@ -176,13 +154,22 @@
 
         function cakeBoom() {
             document.getElementById('main-body').classList.add('shake');
-            if(isReady) ytPlayer.loadVideoById(bdayId);
+            
+            // Raw URL Injection for Birthday Song
+            document.getElementById('yt-iframe').src = "https://www.youtube.com/embed/qcB6z6nsC5k?autoplay=1";
+            
             document.getElementById('panel').style.display = 'block';
-            const msg = "HAPPY BIRTHDAY NEEHARIKA! 🌸\n\nYou are the most beautiful melody I’ve ever found. May your year be as radiant as your spirit. This garden and every word here... they are all for you.";
-            typeWriter(msg, 0, () => { document.getElementById('pdf-btn').style.display = 'inline-block'; });
-            var end = Date.now() + 15000;
+            
+            const bdayMessage = "HAPPY BIRTHDAY NEEHARIKA! 🌸\n\nYou are the most beautiful melody I’ve ever found. May your year be as radiant as your spirit. This garden and every word here... they are all for you.";
+            
+            typeWriter(bdayMessage, 0, () => {
+                document.getElementById('pdf-btn').style.display = 'inline-block';
+            });
+
+            var duration = 15 * 1000;
+            var end = Date.now() + duration;
             (function frame() {
-                confetti({ particleCount: 10, spread: 85, origin: { y: 0.6 }, colors: ['#ffd700', '#ff4081'] });
+                confetti({ particleCount: 15, spread: 85, origin: { y: 0.6 }, colors: ['#ffd700', '#ff4081', '#ffffff'] });
                 if (Date.now() < end) requestAnimationFrame(frame);
             }());
         }
@@ -190,8 +177,10 @@
         function downloadPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.setFontSize(22); doc.text("For Neeharika", 105, 30, { align: "center" });
-            doc.setFontSize(12); let y = 50;
+            doc.setFont("times", "italic"); doc.setFontSize(22);
+            doc.text("For Neeharika", 105, 30, { align: "center" });
+            doc.setFontSize(12); doc.setFont("helvetica", "normal");
+            let y = 50;
             story.forEach(s => {
                 let lines = doc.splitTextToSize(s, 170); doc.text(lines, 20, y);
                 y += (lines.length * 7) + 10;
