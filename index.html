@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Neeharika</title>
+    <style>
+        body {
+            margin: 0; padding: 0; font-family: 'Georgia', serif;
+            background-color: #0a0a0a; color: #00ff00;
+            transition: background-color 4s ease, color 4s ease;
+            overflow-x: hidden;
+        }
+
+        /* Terminal Phase */
+        #terminal {
+            display: flex; flex-direction: column; justify-content: center; 
+            align-items: center; height: 100vh; font-family: monospace;
+        }
+        button {
+            padding: 15px 30px; margin-top: 20px; background: transparent; 
+            color: inherit; border: 1px solid currentColor; cursor: pointer;
+            font-size: 1.2rem; transition: 0.3s;
+        }
+        button:hover { background: currentColor; color: #0a0a0a; }
+
+        /* Story Phase */
+        #narrative {
+            display: none; opacity: 0; padding: 10vh 15vw;
+            font-size: 1.4rem; line-height: 2; transition: opacity 3s ease;
+        }
+        .story-section { min-height: 80vh; display: flex; align-items: center; }
+
+        /* Themes */
+        .theme-golden { background-color: #d4af37; color: #2c2c2c; }
+        .theme-spring { background-color: #fce4ec; color: #3e2723; }
+
+        /* Dancing Paper Animation */
+        .paper {
+            position: fixed; width: 20px; height: 25px; background: rgba(255,255,255,0.7);
+            top: -50px; left: 50%; opacity: 0;
+            animation: dance 8s infinite linear; pointer-events: none;
+        }
+        @keyframes dance {
+            0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 1; }
+            50% { transform: translateY(50vh) rotate(180deg) translateX(50px); }
+            100% { transform: translateY(100vh) rotate(360deg) translateX(-50px); opacity: 0; }
+        }
+
+        /* Vault Result */
+        #vault-result { font-style: italic; font-weight: bold; margin-top: 5vh; white-space: pre-wrap;}
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="espresso.mp3" type="audio/mpeg"> 
+    </audio>
+
+    <div id="terminal">
+        <h2>SYSTEM LOCKED</h2>
+        <p>Awaiting Protocol Execution...</p>
+        <button onclick="initiateSequence()">Execute: ./run_neeharika_protocol</button>
+    </div>
+
+    <div class="paper" id="stray-paper"></div>
+
+    <div id="narrative">
+        <div class="story-section">
+            <p>In the golden haze of a September morning, I was traveling, wandering through streets I barely knew, when I met her—Neeharika. At first, it was nothing remarkable. Just another online conversation while the world passed by outside my window.</p>
+        </div>
+        <div class="story-section">
+            <p>But even in those first two days, I sensed something different about her. She didn’t just speak—she listened. Not the polite nod-and-smile kind of listening, but the kind that notices tremors in voices, the hesitation behind smiles...</p>
+        </div>
+        <div class="story-section" id="spring-trigger">
+            <p>Her favorite season is spring, and it suits her perfectly. There’s a rhythm to her presence, a cadence that mirrors renewal itself. Joy, observation, insight—they flow naturally from her.</p>
+        </div>
+        <div class="story-section">
+            <p>Because of personal reasons and circumstances, I couldn’t always talk as much as I wanted. But even through all the ups and downs, I feel so comfortable and secure talking to you. That’s rare—and it’s something I treasure deeply.</p>
+            <div id="vault-box">
+                <button onclick="unlockVault()">Decrypt Final Message</button>
+                <p id="vault-result"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function initiateSequence() {
+            document.getElementById('bg-music').play().catch(e => console.log("Audio needs interaction"));
+            
+            document.getElementById('terminal').style.display = 'none';
+            const narrative = document.getElementById('narrative');
+            narrative.style.display = 'block';
+            
+            setTimeout(() => {
+                document.body.className = 'theme-golden';
+                narrative.style.opacity = 1;
+                document.getElementById('stray-paper').style.opacity = 1;
+            }, 100);
+        }
+
+        // Scroll listener for Spring theme transition
+        window.addEventListener('scroll', () => {
+            const trigger = document.getElementById('spring-trigger');
+            const rect = trigger.getBoundingClientRect();
+            if (rect.top < window.innerHeight / 1.5) {
+                document.body.className = 'theme-spring';
+            } else {
+                document.body.className = 'theme-golden';
+            }
+        });
+
+        // Backend API Call
+        async function unlockVault() {
+            const resultBox = document.getElementById('vault-result');
+            resultBox.innerText = "Decrypting...";
+            
+            // REPLACE THIS URL WITH YOUR CLOUDFLARE WORKER URL
+            const WORKER_URL = "https://your-worker-name.your-username.workers.dev"; 
+
+            try {
+                const response = await fetch(WORKER_URL);
+                const data = await response.json();
+                resultBox.innerText = data.message;
+            } catch (error) {
+                resultBox.innerText = "Error connecting to the vault. Please try again.";
+            }
+        }
+    </script>
+</body>
+</html>
