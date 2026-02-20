@@ -4,183 +4,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neeharika's Constellation</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=Playfair+Display:ital,wght@0,600;1,600&family=Fira+Code&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <style>
-        body, html {
-            margin: 0; padding: 0; width: 100vw; height: 100vh;
-            font-family: 'Lora', serif; overflow: hidden; background-color: #0a0a0a;
+        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; font-family: 'Lora', serif; overflow: hidden; background-color: #0a0a0a; color: #fff; }
+
+        /* Garden Gateway with Timer */
+        #gateway {
+            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1558904541-efa843a96f0f?q=80&w=2000') center/cover;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; transition: all 1s ease-out;
+        }
+        
+        #doraemon-box {
+            background: rgba(255, 255, 255, 0.9); padding: 40px; border-radius: 30px; 
+            text-align: center; color: #333; box-shadow: 0 20px 60px rgba(0,0,0,0.5); width: 85%; max-width: 500px;
         }
 
-        /* External High-Res Tree Background */
+        #timer { font-family: 'Fira Code', monospace; font-size: 2.5rem; color: #d81b60; margin: 20px 0; font-weight: bold; }
+        
+        /* Main Tree Constellation */
         #tree-canvas {
             position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=2000') center/cover no-repeat;
-            transition: filter 3s ease; filter: brightness(0.6);
+            background: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=2000') center/cover;
+            display: none; filter: brightness(0.6); transition: filter 2s;
         }
 
-        /* Image-Filled Nodes */
         .node {
-            position: absolute; width: 65px; height: 65px;
-            background-size: cover; background-position: center;
-            border: 3px solid rgba(255, 255, 255, 0.8); border-radius: 50%;
-            box-shadow: 0 0 15px rgba(255, 235, 59, 0.6);
-            cursor: pointer; transform: translate(-50%, -50%);
-            transition: all 0.4s ease; z-index: 10;
+            position: absolute; width: 70px; height: 70px; border-radius: 50%; border: 3px solid #fff;
+            background-size: cover; cursor: pointer; transform: translate(-50%, -50%); z-index: 10;
+            box-shadow: 0 0 20px rgba(255,255,255,0.5); transition: 0.3s;
         }
-        .node:hover { transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 30px #fff, 0 0 50px #ffeb3b; z-index: 12; }
-        
-        /* Dashboard Placements & External Thumbnail Images */
-        #node-1 { bottom: 15%; left: 25%; background-image: url('https://images.unsplash.com/photo-1474403078171-841808b8b8ba?w=200'); }
-        #node-2 { bottom: 30%; left: 70%; background-image: url('https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=200'); }
-        #node-3 { bottom: 45%; left: 35%; background-image: url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=200'); }
-        #node-4 { bottom: 60%; left: 65%; background-image: url('https://images.unsplash.com/photo-1490750967868-88cb4aca8fbf?w=200'); }
-        #node-5 { bottom: 75%; left: 30%; background-image: url('https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=200'); }
-        #node-6 { bottom: 80%; left: 75%; background-image: url('https://images.unsplash.com/photo-1507504031008-b5d7d8e8b0c7?w=200'); }
-        
-        /* The Finale Cake Node */
-        #node-cake {
-            position: absolute; top: 10%; left: 50%;
-            font-size: 4rem; cursor: pointer; display: none;
-            transform: translate(-50%, -50%); z-index: 15;
-            text-shadow: 0 0 25px #ff4081; animation: float 3s infinite ease-in-out;
-        }
-        @keyframes float { 0%, 100% { top: 10%; } 50% { top: 8%; } }
+        .node:hover { transform: translate(-50%, -50%) scale(1.2); box-shadow: 0 0 40px #ffeb3b; }
 
-        /* Frosted Glass Memory Panel */
+        /* Coordinates */
+        #node-1 { bottom: 20%; left: 30%; background-image: url('https://images.unsplash.com/photo-1474403078171-841808b8b8ba?w=200'); }
+        #node-2 { bottom: 35%; left: 70%; background-image: url('https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=200'); }
+        #node-3 { bottom: 50%; left: 25%; background-image: url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=200'); }
+        #node-4 { bottom: 65%; left: 75%; background-image: url('https://images.unsplash.com/photo-1490750967868-88cb4aca8fbf?w=200'); }
+        #node-cake { position: absolute; top: 15%; left: 50%; font-size: 4rem; cursor: pointer; display: none; transform: translate(-50%, -50%); animation: float 3s infinite; }
+
+        @keyframes float { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -60%) scale(1.1); } }
+
+        /* Overlays */
         #memory-panel {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-            width: 80vw; max-width: 600px; padding: 40px; text-align: center;
-            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px;
-            color: #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-            opacity: 0; pointer-events: none; transition: all 0.5s ease; z-index: 20;
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 80%; max-width: 500px; background: rgba(255,255,255,0.1); backdrop-filter: blur(20px);
+            padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3);
+            text-align: center; display: none; z-index: 200;
         }
-        #memory-panel.active { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
-        #memory-panel p { font-size: 1.4rem; line-height: 1.8; text-shadow: 1px 1px 6px rgba(0,0,0,0.9); }
-        .close-btn { margin-top: 20px; padding: 10px 30px; background: rgba(255, 255, 255, 0.2); color: #fff; border: 1px solid #fff; border-radius: 30px; cursor: pointer; transition: 0.3s; }
-        .close-btn:hover { background: #fff; color: #000; }
 
-        /* Spring Petals Engine */
-        .petal { position: absolute; background: #ffb7b2; border-radius: 150% 0 150% 0; opacity: 0.7; pointer-events: none; animation: fall linear infinite; z-index: 5; }
-        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
-
-        /* Gateway Overlay */
-        #gateway { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background: #0a0a0a; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 50; transition: opacity 1.5s; }
-        .gateway-btn { padding: 15px 40px; font-size: 1.2rem; background: transparent; color: #fff; border: 2px solid #ff4081; border-radius: 30px; cursor: pointer; box-shadow: 0 0 15px #ff4081; transition: 0.3s; font-family: 'Playfair Display', serif; }
-        .gateway-btn:hover { background: #ff4081; }
+        .petal { position: absolute; background: #ffb7b2; border-radius: 150% 0 150% 0; animation: fall linear infinite; pointer-events: none; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <audio id="audio-bg" loop><source src="https://archive.org/download/aachalketujhe/Aa%20Chal%20Ke%20Tujhe.mp3" type="audio/mpeg"></audio>
-    <audio id="audio-bday" loop><source src="https://archive.org/download/HappyBirthdayToYou_201708/Happy%20Birthday%20To%20You.mp3" type="audio/mpeg"></audio>
+    <audio id="audio-bg"><source src="https://archive.org/download/aachalketujhe/Aa%20Chal%20Ke%20Tujhe.mp3" type="audio/mpeg"></audio>
+    <audio id="audio-bday"><source src="https://archive.org/download/HappyBirthdayToYou_201708/Happy%20Birthday%20To%20You.mp3" type="audio/mpeg"></audio>
 
     <div id="gateway">
-        <button class="gateway-btn" onclick="initializeSystem()">Enter Constellation</button>
+        <div id="doraemon-box">
+            <img src="https://upload.wikimedia.org/wikipedia/en/b/bd/Doraemon_character.png" width="120" alt="Doraemon">
+            <h2 style="font-family: 'Playfair Display';">Neeharika, are you ready?</h2>
+            <div id="timer">00:00:00</div>
+            <p>The constellation awakens at midnight...</p>
+        </div>
     </div>
 
     <div id="tree-canvas">
-        <div class="node" id="node-1" onclick="openMemory(1)"></div>
-        <div class="node" id="node-2" onclick="openMemory(2)"></div>
-        <div class="node" id="node-3" onclick="openMemory(3)"></div>
-        <div class="node" id="node-4" onclick="openMemory(4)"></div>
-        <div class="node" id="node-5" onclick="openMemory(5)"></div>
-        <div class="node" id="node-6" onclick="openMemory(6)"></div>
-        <div id="node-cake" onclick="triggerFinale()">🎂</div>
+        <div class="node" id="node-1" onclick="showMemory(1)"></div>
+        <div class="node" id="node-2" onclick="showMemory(2)"></div>
+        <div class="node" id="node-3" onclick="showMemory(3)"></div>
+        <div class="node" id="node-4" onclick="showMemory(4)"></div>
+        <div id="node-cake" onclick="birthdayBoom()">🎂</div>
     </div>
 
-    <div id="memory-panel">
-        <p id="memory-text"></p>
-        <button class="close-btn" onclick="closeMemory()">Continue</button>
+    <div id="memory-panel" onclick="this.style.display='none'">
+        <p id="memory-text" style="font-size: 1.3rem; line-height: 1.6;"></p>
+        <p style="font-size: 0.8rem; color: #ccc;">(Click anywhere to close)</p>
     </div>
 
     <script>
-        const API_BASE = "https://neeharika-vault.saliljha523.workers.dev";
-        let finaleUnlocked = false;
-        
-        // Hardcoded story for immediate visual loading
-        const storyData = {
-            1: "In the golden haze of a September morning, I was traveling, wandering through streets I barely knew, when I met her—Neeharika.",
-            2: "But even in those first two days, I sensed something different about her. She didn’t just speak—she listened.",
-            3: "Her joy is effortless. I remember a small moment: a stray paper caught in the wind. 'It’s dancing,' she said.",
-            4: "Her favorite season is spring, and it suits her perfectly. There’s a rhythm to her presence, a cadence that mirrors renewal itself.",
-            5: "Because of personal reasons, I couldn’t always talk as much as I wanted. But I feel so comfortable and secure talking to you.",
-            6: "People like her don’t merely enter your life—they illuminate it. And I carry her presence like sunlight."
-        };
+        const memories = [
+            "In the golden haze of a September morning, I met someone remarkable: You.",
+            "You didn't just speak—you listened. You saw the silent battles and the tremors in voices.",
+            "“Even chaos can have rhythm,” you said. You found beauty in a stray paper dancing in the wind.",
+            "You are like Spring—fragile, persistent, and waiting to bloom. You illuminate everything."
+        ];
 
-        async function initializeSystem() {
-            document.getElementById('audio-bg').play();
-            document.getElementById('gateway').style.opacity = '0';
-            setTimeout(() => document.getElementById('gateway').style.display = 'none', 1500);
+        function updateTimer() {
+            const now = new Date();
+            const bday = new Date('2026-02-21T00:00:00+05:30');
+            const diff = bday - now;
 
-            // Fetch Time-Lock status from API
-            try {
-                const res = await fetch(`${API_BASE}/api/story`);
-                const data = await res.json();
-                if (data.finaleUnlocked) {
-                    finaleUnlocked = true;
-                    document.getElementById('node-cake').style.display = 'block';
-                }
-            } catch (e) { console.error("API Sync Failed"); }
+            if (diff <= 0) {
+                document.getElementById('timer').innerText = "00:00:00";
+                startTheBoom();
+                return;
+            }
 
-            generatePetals();
+            const h = Math.floor(diff / 3600000).toString().padStart(2, '0');
+            const m = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+            const s = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+            document.getElementById('timer').innerText = `${h}:${m}:${s}`;
+            setTimeout(updateTimer, 1000);
         }
 
-        function openMemory(id) {
+        function startTheBoom() {
+            const gateway = document.getElementById('gateway');
+            gateway.style.transform = "scale(2)";
+            gateway.style.opacity = "0";
+            
+            setTimeout(() => {
+                gateway.style.display = 'none';
+                document.getElementById('tree-canvas').style.display = 'block';
+                document.getElementById('audio-bg').play();
+                // Check if cake should be visible
+                document.getElementById('node-cake').style.display = 'block';
+                generatePetals();
+            }, 1000);
+        }
+
+        function showMemory(id) {
             const panel = document.getElementById('memory-panel');
-            document.getElementById('memory-text').innerHTML = storyData[id];
-
-            const brightness = 0.6 + (id * 0.06);
-            document.getElementById('tree-canvas').style.filter = `brightness(${brightness})`;
-
-            panel.classList.add('active');
+            document.getElementById('memory-text').innerText = memories[id-1];
+            panel.style.display = 'block';
+            document.getElementById('tree-canvas').style.filter = `brightness(${0.6 + (id*0.1)})`;
         }
 
-        function closeMemory() {
-            document.getElementById('memory-panel').classList.remove('active');
-        }
-
-        function triggerFinale() {
+        function birthdayBoom() {
             document.getElementById('audio-bg').pause();
             document.getElementById('audio-bday').play();
-
+            
             const panel = document.getElementById('memory-panel');
-            document.getElementById('memory-text').innerHTML = `<strong style='font-size:2.2rem; color:#ff4081; font-family: "Playfair Display", serif;'>Happy Birthday, Neeharika. 🌸</strong><br><br>May this year be as vibrant, joyful, and full of possibilities as you are.`;
-            panel.classList.add('active');
+            document.getElementById('memory-text').innerHTML = "<span style='color:#ff4081; font-size:2rem;'>HAPPY BIRTHDAY NEEHARIKA! 🌸</span><br><br>You don't just enter lives—you illuminate them.";
+            panel.style.display = 'block';
 
-            launchFireworks();
-        }
-
-        function launchFireworks() {
-            var duration = 15 * 1000;
-            var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
-            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
-
-            var interval = setInterval(function() {
-                var timeLeft = animationEnd - Date.now();
-                if (timeLeft <= 0) return clearInterval(interval);
-                var particleCount = 50 * (timeLeft / duration);
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-            }, 250);
+            var end = Date.now() + (15 * 1000);
+            (function frame() {
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
         }
 
         function generatePetals() {
-            const container = document.getElementById('tree-canvas');
-            for(let i=0; i<40; i++) {
+            for(let i=0; i<30; i++) {
                 let p = document.createElement('div');
                 p.className = 'petal';
                 p.style.left = Math.random() * 100 + 'vw';
-                p.style.width = Math.random() * 12 + 6 + 'px';
+                p.style.width = (Math.random() * 10 + 5) + 'px';
                 p.style.height = p.style.width;
-                p.style.top = '-' + (Math.random() * 20 + 10) + 'px';
-                p.style.animationDuration = Math.random() * 6 + 4 + 's';
-                p.style.animationDelay = Math.random() * 5 + 's';
-                container.appendChild(p);
+                p.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                document.body.appendChild(p);
             }
         }
+
+        updateTimer();
     </script>
 </body>
 </html>
