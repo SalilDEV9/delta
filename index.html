@@ -41,21 +41,20 @@
         #node-7 { bottom: 72%; left: 32%; } #node-8 { bottom: 82%; left: 68%; }
         #node-9 { bottom: 90%; left: 50%; }
 
-        #node-cake { position: absolute; top: 18%; left: 50%; font-size: 6rem; display: none; transform: translate(-50%, -50%); cursor: pointer; z-index: 1000; animation: float 4s infinite ease-in-out; pointer-events: auto; }
+        #node-cake { position: absolute; top: 18%; left: 50%; font-size: 6rem; display: none; transform: translate(-50%, -50%); cursor: pointer; z-index: 1000; animation: float 4s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translate(-50%, -50%) translateY(0); } 50% { transform: translate(-50%, -50%) translateY(-20px); } }
 
         #panel {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 85%; max-width: 700px; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(40px);
+            width: 90%; max-width: 750px; background: rgba(10, 10, 10, 0.96); backdrop-filter: blur(50px);
             padding: 40px; border-radius: 30px; border: 1px solid var(--gold); text-align: center; display: none; z-index: 2000;
         }
-        #panel-text { font-size: 1.4rem; line-height: 1.8; color: #fff; }
+        #panel-text { font-size: 1.3rem; line-height: 1.8; color: #fff; font-weight: 300; }
 
         #pdf-btn { display: none; margin-top: 25px; padding: 12px 30px; background: var(--gold); color: #000; border: none; border-radius: 25px; font-weight: 600; cursor: pointer; }
 
         #yt-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 5000; background: #000; padding: 5px; border-radius: 15px; border: 1px solid var(--gold); display: none; }
 
-        /* Effects */
         .shake { animation: shake 0.5s both; }
         @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
         .typing { border-right: 2px solid var(--gold); animation: blink 0.7s infinite; }
@@ -90,7 +89,7 @@
     <div id="panel">
         <p id="panel-text"></p>
         <button id="pdf-btn" onclick="downloadPDF()">Download Memory PDF</button>
-        <p style="font-size: 0.8rem; color: var(--gold); margin-top: 20px; cursor: pointer;" onclick="closePanel()">[ Back ]</p>
+        <p style="font-size: 0.8rem; color: var(--gold); margin-top: 25px; cursor: pointer;" onclick="closePanel()">[ Back ]</p>
     </div>
 
     <script>
@@ -106,19 +105,18 @@
             });
         }
 
-        // FORCE START: Press 6
         window.addEventListener('keydown', (e) => { if (e.key === '6') initiateGarden(); });
 
         const story = [
-            "In the golden haze of a September morning, I met her—Neeharika. At first, it was just another online conversation while the world passed by.",
-            "She didn’t just speak—she listened. The kind that notices tremors in voices and silent battles.",
-            "Her favorite season is spring: 'I love spring because it whispers possibilities.'",
-            "Her joy is effortless. One of her favorite songs, Espresso Cherry Cherry Lady, played softly once.",
-            "I remember a small moment: a stray paper caught in the wind. 'It’s dancing,' she said. 'Even chaos can have rhythm.'",
-            "She has become more than a memory. She is a season, a melody, a story unfolding.",
-            "I carry her presence like sunlight, warming corners I didn’t know were cold.",
-            "I couldn’t always talk as much as I wanted due to personal reasons, but I feel so secure talking to you.",
-            "Today, on your birthday, I want to say: may this year be as vibrant as you are. Happy Birthday! 🌸"
+            "In the golden haze of a September morning, I met her—Neeharika. At first, it was just another online conversation while the world passed by. [cite: 2026-01-20]",
+            "She didn’t just speak—she listened. The kind that notices tremors in voices and silent battles. [cite: 2026-01-20]",
+            "Her favorite season is spring: 'I love spring because it whispers possibilities.' [cite: 2026-01-20]",
+            "Her joy is effortless. One of her favorite songs, Espresso Cherry Cherry Lady, played softly once. [cite: 2026-01-20]",
+            "I remember a small moment: a stray paper caught in the wind. 'It’s dancing,' she said. 'Even chaos can have rhythm.' [cite: 2026-01-20]",
+            "She has become more than a memory. She is a season, a melody, a story unfolding. [cite: 2026-01-20]",
+            "I carry her presence like sunlight, warming corners I didn’t know were cold. [cite: 2026-01-20]",
+            "I couldn’t always talk as much as I wanted due to personal reasons, but I feel so secure talking to you. [cite: 2026-01-20]",
+            "Today, on your birthday, I want to say: may this year be as vibrant as you are. Happy Birthday! 🌸 [cite: 2026-01-20]"
         ];
 
         function updateTimer() {
@@ -156,10 +154,19 @@
             document.getElementById('main-body').classList.add('shake');
             if(isReady) ytPlayer.loadVideoById('qcB6z6nsC5k');
             document.getElementById('panel').style.display = 'block';
-            typeWriter("Happy Birthday, Neeharika! 🌸", 0, () => {
+            
+            const longMessage = "HAPPY BIRTHDAY NEEHARIKA! 🌸\n\nMay this year be as radiant, joyful, and full of beautiful surprises as you are. Today is a celebration of the light you bring into the world. [cite: 2026-01-20]";
+            
+            typeWriter(longMessage, 0, () => {
                 document.getElementById('pdf-btn').style.display = 'inline-block';
             });
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+
+            var duration = 20 * 1000;
+            var end = Date.now() + duration;
+            (function frame() {
+                confetti({ particleCount: 8, spread: 80, origin: { y: 0.6 }, colors: ['#ffd700', '#ff4081'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
         }
 
         function downloadPDF() {
@@ -168,7 +175,7 @@
             doc.setFontSize(22); doc.text("For Neeharika", 105, 30, { align: "center" });
             doc.setFontSize(12); let y = 50;
             story.forEach(s => {
-                let lines = doc.splitTextToSize(s, 170); doc.text(lines, 20, y);
+                let lines = doc.splitTextToSize(s.replace(/\/g, ""), 170); doc.text(lines, 20, y);
                 y += (lines.length * 7) + 10;
             });
             doc.save("Story_for_Neeharika.pdf");
